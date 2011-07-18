@@ -95,6 +95,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
     // Constant Strings, error codes, messages, etc.
     private static final String ERROR_NO_ROWS = "Error: It appears the database has no entries\nWould you like to exit?";
     private static final String ERROR_CONNECT = "Connection to database timed out.\nWould you like to exit?";
+    private static final String ERROR_NO_PRODUCT = "Please choose a product type before graphing";
     private static final String MONGO_CONNECT_ERR = "Error connecting to MongoDB!";
     private static final String MONGO_EXCEPTION_ERR = "Exception while processing request";
     private static final String APACHE_CONNECT_ERR = "Apache Tomcat/6.0.28 - Error";
@@ -111,6 +112,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
     private static final int orangeBackground = 0xAFEA8400;
     private static final int blueText = 0xFF1F78B2;
     
+    // Time to wait between web service calls
     private static int SLEEP_TIME_MILLIS = 1000;
 	
 	/*
@@ -186,6 +188,17 @@ public class OptionsActivity extends Activity implements OnClickListener {
         welcomeMessage.show();
      }
     
+    /*
+     * class MyGestureDetector
+     *  
+     * This class is used to respond to user gestures on the data table layout
+     * Swiping to the left or right when data is present causes the ViewFlipper
+     * to change its current display to the next page.
+     * 
+     * Referenced code for gesture detection can be found here:
+     * http://savagelook.com/blog/android/swipes-or-flings-for-navigation-in-android
+     * 
+     */
     class MyGestureDetector extends SimpleOnGestureListener {
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
@@ -241,7 +254,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	            	myIntent.putExtra("pt", generateGraphParcel());
 	            	OptionsActivity.this.startActivity(myIntent);
             	}
-            	else Toast.makeText(this, "Please choose a product type before graphing", Toast.LENGTH_SHORT).show();
+            	else Toast.makeText(this, ERROR_NO_PRODUCT, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.helpIcon: 
             	Toast.makeText(this, "Launch Help Activity", Toast.LENGTH_SHORT).show();
@@ -255,12 +268,11 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	/*
      * MyOnItemSelectedListener
      * 
-     * Listener for the spinner menu.
+     * Listener for the spinner menu
      * 
      * Handles the respective web service call by creating an AsyncTask - see WebServiceTask for more info.
-     * After retrieving array of PriceTicker objects, this method populates a table layout with the strike,
-     * bid, and ask information by calling populateRows().
-     *
+     * After retrieving array of PriceTick objects, this method populates a table layout with the data received
+     * from the web service call.
      */
     public class ProductChoiceSelectionListener implements OnItemSelectedListener {
 
@@ -292,11 +304,8 @@ public class OptionsActivity extends Activity implements OnClickListener {
      * 
      * Listener for the clickable elements in the UI (Go button)
      *       
-     * Calls the web service task if the user pressed Go
+     * Executes the web service task with the current product choice
      *   
-     *       
-     * Handles the respective web service call by creating an AsyncTask - see WebServiceTask for more info.
-	 *
      *
      */
     @Override
@@ -317,12 +326,8 @@ public class OptionsActivity extends Activity implements OnClickListener {
     /*
      * populateRowsPortrait()
      * 
-     * Populates the data table when phone is in portrait orientation
+     * This is no longer used - plan to force Landscape orientation for next release
      * 
-     * The respective columns in portrait mode are:
-     * 		Strike
-     *		Bid
-     *		Ask
      */
     public void populateRowsPortrait(ArrayList<PriceTick> pt) {
 
@@ -337,11 +342,11 @@ public class OptionsActivity extends Activity implements OnClickListener {
      * more data.
      * 
      * The respective columns in landscape mode tab 1 are:
-     * 		Put/Call/Future
+     * 		Call Bid
+     *		Call Ask
      *		Strike
-     *		Bid
-     *		Ask
-     *      Theoretical Premium
+     *		Put Bid
+     *      Put Ask
      *     
      * The respective columns in landscape mode tab 2 are:
      * 		Δ Delta
@@ -528,7 +533,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
     /*
      * findMatchingBidAsk(double strike, String putcall)
      * 
-     * This is a helper method used when populating the data table dislpay
+     * This is a helper method used when populating the data table display
      * Given a particular strike, this method will return an array consisting
      * of two doubles: the bid and ask price corresponding to that strike.  The
      * second parameter indicates whether you are looking for the put or call option.
@@ -559,7 +564,8 @@ public class OptionsActivity extends Activity implements OnClickListener {
     /*
      * findClosestStrike()
      * 
-     * Iterates
+     * Iterates through list of PriceTick objects and returns the numeric
+     * value of the Strike closest to the current future price
      * 
      */
     public double findClosestStrike() {
@@ -590,6 +596,21 @@ public class OptionsActivity extends Activity implements OnClickListener {
 		return pt;
 	}
 
+    
+    /*
+     * class WebServiceTask
+     * 
+     * This class provides an implementation of AsyncTask that continuously polls an
+     * instance of MongoDB for new data.  The sleep interval is set as the static
+     * constant SLEEP_TIME_MILLIS.  The AsyncTask runs in an infinite loop until it is
+     * canceled by the user turning off auto refresh or when a new product type is selected.
+     * 
+     * This class also handles the parsing of the service's JSON response to a Java object
+     * using the google-gson driver.
+     * 
+     * The actual HTTP call is externalized to the RestClient class.
+     * 
+     */
 	public class WebServiceTask extends AsyncTask<String, ArrayList<PriceTick>, String> {
     	private ArrayList <PriceTick> arr;
     	
@@ -688,7 +709,16 @@ public class OptionsActivity extends Activity implements OnClickListener {
         }
     }
 
-	
+	/*
+	 * generateGraphParcel()
+	 * 
+	 * This method captures the current data display with the intent of
+	 * sending all data over to the graphing activity.  The data structure used
+	 * to store this parcel is a HashMap with a string identifier as the key,
+	 * and the value being a list of Doubles which represent the actual numeric
+	 * values.
+	 * 
+	 */
     private HashMap<String, ArrayList<Double>> generateGraphParcel() {
     	HashMap<String, ArrayList<Double>> result = new HashMap<String, ArrayList<Double>>();
     	
