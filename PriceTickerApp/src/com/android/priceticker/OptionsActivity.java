@@ -178,7 +178,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
         AlertDialog.Builder welcomeDialog = new AlertDialog.Builder(this);
         welcomeDialog.setMessage(welcomeMsg)
         	.setTitle("Welcome!")
-        	.setIcon(R.drawable.icon)
+        	.setIcon(R.drawable.ic_menu_globe)
         	.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                  dialog.cancel();
@@ -246,8 +246,6 @@ public class OptionsActivity extends Activity implements OnClickListener {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.optionsIcon:
-                break;
             case R.id.graphingIcon:
             	if (pt != null) {
 	            	Intent myIntent = new Intent(OptionsActivity.this, GraphingActivity.class);

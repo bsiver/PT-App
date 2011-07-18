@@ -129,10 +129,6 @@ public class GraphingActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.optionsIcon:	
-            	Intent myIntent = new Intent(GraphingActivity.this, OptionsActivity.class);
-			   	GraphingActivity.this.startActivity(myIntent);
-                break;
             case R.id.graphingIcon:  
             	Toast.makeText(this, "Already in Graphing View!", Toast.LENGTH_SHORT).show();   
                 break;
