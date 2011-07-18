@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="lib" path="/home/e17841/Downloads/gson-1.7.1.jar"/>
+	<classpathentry kind="lib" path="/home/e17841/Downloads/Androidplot-core-0.4.3-release.jar"/>
+	<classpathentry kind="lib" path="/home/e17841/Downloads/mongo-2.5.3.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

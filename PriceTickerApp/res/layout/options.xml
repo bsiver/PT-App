@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/main"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/app_border"
+    android:layout_margin="25dip">
+    
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white">
+    
+     <!-- Layout for data table heading -->
+	<RelativeLayout android:id="@+id/mainHeader"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:background="@drawable/header_background">
+	
+		<!-- Product Drop-Down Menu -->
+		<Spinner android:id="@+id/spinner" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:prompt="@string/product_prompt"
+			android:layout_centerInParent="true"/>
+
+		<ToggleButton android:id="@+id/toggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOn="Auto Refresh On"
+        android:textOff="Auto Refresh Off"
+        android:layout_toRightOf="@id/spinner"
+        android:layout_centerInParent="true"/>
+        
+        <ImageView 
+	   	android:id="@+id/header_image"
+	   	android:src="@drawable/logo_mobile"
+	   	android:layout_width="wrap_content"
+	   	android:layout_height="wrap_content"
+	   	android:layout_toRightOf="@id/toggleButton"
+	   	android:layout_alignParentRight="@id/main">
+	   	</ImageView>
+	</RelativeLayout>
+   
+   		     
+   	
+    
+    <!-- Layout for data table heading -->	    
+    <RelativeLayout android:id="@+id/dataTableHeading"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content">
+		
+			<!-- Page 1 of Horizontal Data Table Headings -->
+			<ViewFlipper android:id="@+id/ColumnFlipper"
+		             android:layout_width="fill_parent" android:layout_height="wrap_content"
+		             android:layout_below="@+id/futureHeading">		
+			<TableLayout
+				  xmlns:android="http://schemas.android.com/apk/res/android"
+				  android:layout_width="fill_parent"
+				  android:layout_height="wrap_content"
+				  android:stretchColumns="*"
+				  android:id="@+id/dataTableHeading">
+				  
+			<!-- Headings to specify Calls on left side and puts on right -->
+			 <TableRow>
+			    <TextView android:text="Calls"    
+			        android:layout_column="1"
+					android:textStyle="normal|bold|italic"
+					android:textColor="@color/black"
+					android:textSize="20dip">
+			    </TextView>
+			    <TextView android:text="Puts"
+			        android:layout_column="5"
+			        android:textStyle="normal|bold|italic"
+					android:textColor="@color/black"
+					android:textSize="20dip"
+					android:gravity="right">
+			    </TextView>
+			 </TableRow>
+			 
+			 <TableRow android:background="@color/orange_background">
+			    <TextView android:text="Bid"    
+			        android:layout_column="0"
+					android:textColor="@color/white"
+					android:textSize="18dip"
+					android:gravity="left">
+			    </TextView>
+			    <TextView android:text="Ask"
+			        android:layout_column="1"
+					android:textColor="@color/white"
+					android:textSize="18dip"
+					android:gravity="left">
+			    </TextView>
+			    <TextView android:text="Strike"
+			        android:layout_column="3"
+					android:textColor="@color/white"
+					android:textSize="18dip"
+					android:gravity="center">
+			    </TextView>
+			    <TextView android:text="Bid"
+			        android:layout_column="5" 
+					android:textColor="@color/white"
+					android:textSize="18dip"
+					android:gravity="right">
+			    </TextView>
+			    <TextView android:text="Ask"    
+			        android:layout_column="6"
+					android:textColor="@color/white"
+					android:textSize="18dip"
+					android:gravity="right">
+			    </TextView>
+			  </TableRow>
+			 </TableLayout>
+		    
+		    <!-- Page 2 of Horizontal Data Table Headings -->
+		    <TableLayout
+			  xmlns:android="http://schemas.android.com/apk/res/android"
+			  android:layout_width="fill_parent"
+			  android:layout_height="wrap_content"
+			  android:stretchColumns="*">
+			<!-- This is a dummy row to align the second page headers with the first --> 
+			<TableRow>
+				<TextView 
+				    android:text=" "
+				    android:layout_column="0"
+					android:textColor="@color/transparent"
+					android:textSize="18dip">
+			    </TextView>
+			</TableRow>
+			<TableRow
+			    android:background="@color/orange_background">
+		    <TextView 
+		    	android:text="Strike"    
+		        android:layout_column="0"
+				android:textColor="@color/white"
+				android:textSize="18dip"
+				android:gravity="right">
+		    </TextView>
+		    <TextView 
+		    	android:text="Δ"    
+		        android:layout_column="1"
+				android:textColor="@color/white"
+				android:textSize="18dip"
+				android:gravity="right">
+		    </TextView>
+		    <TextView 
+		    	android:text="Γ"
+		        android:layout_column="2"
+				android:textColor="@color/white"
+				android:textSize="18dip"
+				android:gravity="right">
+		    </TextView>
+		    <TextView  
+		    	android:text="ν"
+		        android:layout_column="3"
+				android:textColor="@color/white"
+				android:textSize="18dip"
+				android:gravity="right">
+		    </TextView>
+		    <TextView
+		    	android:text="Θ"
+		        android:layout_column="4"
+				android:textColor="@color/white"
+				android:textSize="18dip"
+				android:gravity="right">
+		    </TextView>
+		    <TextView
+		    	android:text="ρ"
+		        android:layout_column="5"
+				android:textColor="@color/white"
+				android:textSize="18dip"
+				android:gravity="right">
+		    </TextView>
+		    </TableRow>
+			</TableLayout>
+		    </ViewFlipper>
+		    
+		    <!-- Future Info display header-->	  	     
+		    
+		    <TableLayout
+				  xmlns:android="http://schemas.android.com/apk/res/android"
+				  android:layout_width="fill_parent"
+				  android:layout_height="wrap_content"
+				  android:stretchColumns="*"
+				  android:id="@+id/futureHeading"
+				  android:layout_above="@id/dataTableHeading">
+			 <TableRow>
+			 	 <TextView
+		    	    android:id="@+id/expireDateHeader"
+		    	    android:textSize="18dip"
+		    	    android:textColor="@color/black"
+		    	    android:layout_width="fill_parent"
+		    	    android:layout_column="0"
+		    	    android:layout_height="wrap_content">
+		    	  </TextView>
+			    <TextView
+		    	    android:text="Please select a product type"
+		    	    android:id="@+id/displayHeader"
+		    	    android:textSize="18dip"
+		    	    android:textColor="@color/black"
+		    	    android:layout_width="fill_parent"
+		    	    android:layout_column="1"
+		    	    android:layout_gravity="center"
+		    	    android:layout_height="wrap_content">
+		    	  </TextView>
+		    	  <TextView
+		    	    android:id="@+id/closestStrikeHeader"
+		    	    android:textSize="18dip"
+		    	    android:textColor="@color/black"
+		    	    android:layout_width="fill_parent"
+		    	    android:layout_column="2"
+		    	    android:layout_gravity="right"
+		    	    android:layout_height="wrap_content">
+		    	  </TextView>
+			  </TableRow>
+			 </TableLayout>
+		    
+		    
+	</RelativeLayout>
+	
+	<!-- Data Table Display -->
+	<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+						android:id="@+id/hsv1"
+						android:layout_width="fill_parent"
+						android:layout_height="wrap_content">
+		<ViewFlipper android:id="@+id/dataTableFlipper"
+	             android:layout_width="fill_parent" android:layout_height="wrap_content">
+			
+				<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+							android:layout_width="fill_parent" 
+							android:layout_height="wrap_content"
+							android:id="@+id/dataTable"
+							android:stretchColumns="*">
+				</TableLayout>
+				<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+							android:layout_width="fill_parent" 
+							android:layout_height="wrap_content"
+							android:id="@+id/dataTable2"
+							android:stretchColumns="*">
+				</TableLayout>
+		</ViewFlipper>
+	</ScrollView>
+	
+	</LinearLayout>
+		
+</LinearLayout>
+

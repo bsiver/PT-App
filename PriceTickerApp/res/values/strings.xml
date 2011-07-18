@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Price Ticker</string>
+	<string name="options_name">Options</string>
+	<string name="futures_name">Graphing</string>
+	<string name="labelProduct">Product:</string>
+	
+	<string name="product_prompt">Select a Product</string>
+    <string-array name="products_array">
+        <item>EUD</item>
+        <item>Corn</item>
+        <item>Oil</item>
+        <item>Ten Year Notes</item>
+    </string-array>
+	
+</resources>
