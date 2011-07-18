@@ -12,5 +12,17 @@
         <item>Oil</item>
         <item>Ten Year Notes</item>
     </string-array>
+    
+    <string name="graph_prompt">Select a Product</string>
+    <string-array name="graph_array">
+        <item>Bid</item>
+        <item>Ask</item>
+        <item>Strike</item>
+        <item>Delta</item>
+        <item>Gamma</item>
+        <item>Vega</item>
+        <item>Theta</item>
+        <item>Rho</item>
+    </string-array>
 	
 </resources>
