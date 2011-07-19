@@ -2,15 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:layout_margin="25dip">
  
 	    <com.androidplot.xy.XYPlot
 	    android:id="@+id/mySimpleXYPlot"
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
-	    android:layout_marginTop="50dip"
-	    android:layout_marginLeft="50dip"
-	    android:layout_marginRight="50dip"
-	    android:layout_marginBottom="50dip"
 	    title="A Simple XYPlot Example"/>
 </LinearLayout>

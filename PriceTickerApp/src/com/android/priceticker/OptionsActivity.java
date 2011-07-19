@@ -24,10 +24,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -104,7 +106,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
     										 "More information is available in the help activity\n" +
     										 "Press menu to see options and help";
     									
-    private static final DecimalFormat priceDF = new DecimalFormat("$00.00");
+    private static final DecimalFormat priceDF = new DecimalFormat("$00");
     private static final DecimalFormat greeksDFLT1 = new DecimalFormat("###.00");
     private static final DecimalFormat greeksDFGT1 = new DecimalFormat(".00000");
     
@@ -446,17 +448,29 @@ public class OptionsActivity extends Activity implements OnClickListener {
 			thetaTV.setTextSize(18);
 			rhoTV.setTextSize(18);
 			
-		    callBidTV.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-		    callAskTV.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-			strikeTV.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER);
-			putBidTV.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
-			putAskTV.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
-			greekStrikeTV.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-			deltaTV.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-			gammaTV.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-			vegaTV.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-			thetaTV.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-			rhoTV.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+			callBidTV.setWidth(40);
+			callAskTV.setWidth(40);
+			strikeTV.setWidth(40);
+			putBidTV.setWidth(40);
+			putAskTV.setWidth(40);
+			greekStrikeTV.setWidth(40);
+			deltaTV.setWidth(40);
+			gammaTV.setWidth(40);
+			vegaTV.setWidth(40);
+			thetaTV.setWidth(40);
+			rhoTV.setWidth(40);
+	
+		    callBidTV.setGravity(Gravity.LEFT);
+		    callAskTV.setGravity(Gravity.LEFT);
+			strikeTV.setGravity(Gravity.LEFT);
+			putBidTV.setGravity(Gravity.LEFT);
+			putAskTV.setGravity(Gravity.LEFT);
+			greekStrikeTV.setGravity(Gravity.LEFT);
+			deltaTV.setGravity(Gravity.LEFT);
+			gammaTV.setGravity(Gravity.LEFT);
+			vegaTV.setGravity(Gravity.LEFT);
+			thetaTV.setGravity(Gravity.LEFT);
+			rhoTV.setGravity(Gravity.LEFT);
 
 			
 			if (putCall.equals("C")) {
@@ -495,16 +509,14 @@ public class OptionsActivity extends Activity implements OnClickListener {
 
 			tr.addView(callBidTV);
 			tr.addView(callAskTV);
-			tr.addView(new TextView(this));
 			tr.addView(strikeTV);
-			tr.addView(new TextView(this));
 			tr.addView(putBidTV);
 			tr.addView(putAskTV);
+			tr.addView(deltaTV);
+			tr.addView(gammaTV);
+			tr.addView(vegaTV);
 			
 			tr2.addView(greekStrikeTV);
-			tr2.addView(deltaTV);
-			tr2.addView(gammaTV);
-			tr2.addView(vegaTV);
 			tr2.addView(thetaTV);
 			tr2.addView(rhoTV);
 		

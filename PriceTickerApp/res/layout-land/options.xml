@@ -60,17 +60,18 @@
 			<!-- Headings to specify Calls on left side and puts on right -->
 			 <TableRow>
 			    <TextView android:text="Calls"    
-			        android:layout_column="1"
+			        android:layout_column="0"
 					android:textStyle="normal|bold|italic"
 					android:textColor="@color/black"
-					android:textSize="20dip">
+					android:textSize="20dip"
+					android:gravity="center_horizontal">
 			    </TextView>
 			    <TextView android:text="Puts"
-			        android:layout_column="5"
+			        android:layout_column="3"
 			        android:textStyle="normal|bold|italic"
 					android:textColor="@color/black"
 					android:textSize="20dip"
-					android:gravity="right|center_vertical">
+					android:gravity="center_horizontal">
 			    </TextView>
 			 </TableRow>
 			 
@@ -78,32 +79,43 @@
 			    <TextView android:text="Bid"    
 			        android:layout_column="0"
 					android:textColor="@color/white"
-					android:textSize="18dip"
-					android:gravity="left|center_horizontal">
+					android:textSize="18dip">
 			    </TextView>
 			    <TextView android:text="Ask"
 			        android:layout_column="1"
 					android:textColor="@color/white"
-					android:textSize="18dip"
-					android:gravity="left|center_horizontal">
+					android:textSize="18dip">
 			    </TextView>
 			    <TextView android:text="Strike"
-			        android:layout_column="3"
+			        android:layout_column="2"
 					android:textColor="@color/white"
-					android:textSize="18dip"
-					android:gravity="center|center_horizontal">
+					android:textSize="18dip">
 			    </TextView>
 			    <TextView android:text="Bid"
-			        android:layout_column="5" 
+			        android:layout_column="3" 
 					android:textColor="@color/white"
 					android:textSize="18dip"
-					android:gravity="right|center_horizontal">
+					android:layout_gravity="center_horizontal|left">
 			    </TextView>
 			    <TextView android:text="Ask"    
+			        android:layout_column="4"
+					android:textColor="@color/white"
+					android:textSize="18dip">
+			    </TextView>
+			    <TextView android:text="Δ"    
+			        android:layout_column="5"
+					android:textColor="@color/white"
+					android:textSize="18dip">
+			    </TextView>
+			    <TextView android:text="Γ"    
 			        android:layout_column="6"
 					android:textColor="@color/white"
-					android:textSize="18dip"
-					android:gravity="right|center_horizontal">
+					android:textSize="18dip">
+			    </TextView>
+			    <TextView android:text="ν"    
+			        android:layout_column="7"
+					android:textColor="@color/white"
+					android:textSize="18dip">
 			    </TextView>
 			  </TableRow>
 			 </TableLayout>
