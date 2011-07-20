@@ -24,12 +24,10 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -106,7 +104,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
     										 "More information is available in the help activity\n" +
     										 "Press menu to see options and help";
     									
-    private static final DecimalFormat priceDF = new DecimalFormat("$00");
+    private static final DecimalFormat priceDF = new DecimalFormat("$0");
     private static final DecimalFormat greeksDFLT1 = new DecimalFormat("###.00");
     private static final DecimalFormat greeksDFGT1 = new DecimalFormat(".00000");
     
@@ -411,66 +409,72 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	    
 	        // Build TextViews
 	        TextView callBidTV, callAskTV, strikeTV, putBidTV, putAskTV, 
-	        		 greekStrikeTV, deltaTV, gammaTV, vegaTV, thetaTV, rhoTV;
+	        		 strikeTV2, deltaTV, gammaTV, vegaTV, thetaTV, rhoTV,
+	        		 callBidTV2, callAskTV2, putBidTV2, putAskTV2;
 			callBidTV = new TextView(this);
 			callAskTV = new TextView(this);
 			strikeTV = new TextView(this);
 			putBidTV = new TextView(this);
 			putAskTV = new TextView(this);
-			greekStrikeTV = new TextView(this);
+			strikeTV2 = new TextView(this);
 			deltaTV = new TextView(this);
 			gammaTV = new TextView(this);
 			vegaTV = new TextView(this);
 			thetaTV = new TextView(this);
 			rhoTV = new TextView(this);
+			callBidTV2 = new TextView(this);
+			callAskTV2 = new TextView(this);
+			putBidTV2 = new TextView(this);
+			putAskTV2 = new TextView(this);
+
 			
 			callBidTV.setTextColor(blueText);
 			callAskTV.setTextColor(blueText);
 			strikeTV.setTextColor(blueText);
 			putBidTV.setTextColor(blueText);
 			putAskTV.setTextColor(blueText);
-			greekStrikeTV.setTextColor(blueText);
+			strikeTV2.setTextColor(blueText);
 			deltaTV.setTextColor(blueText);
 			gammaTV.setTextColor(blueText);
 			vegaTV.setTextColor(blueText);
 			thetaTV.setTextColor(blueText);
 			rhoTV.setTextColor(blueText);
+			callBidTV2.setTextColor(blueText);
+			callAskTV2.setTextColor(blueText);
+			putBidTV2.setTextColor(blueText);
+			putAskTV2.setTextColor(blueText);
 			
 			callBidTV.setTextSize(18);
 			callAskTV.setTextSize(18);
 			strikeTV.setTextSize(18);
 			putBidTV.setTextSize(18);
 			putAskTV.setTextSize(18);
-			greekStrikeTV.setTextSize(18);
+			strikeTV2.setTextSize(18);
 			deltaTV.setTextSize(18);
 			gammaTV.setTextSize(18);
 			vegaTV.setTextSize(18);
 			thetaTV.setTextSize(18);
 			rhoTV.setTextSize(18);
-			
-			callBidTV.setWidth(40);
-			callAskTV.setWidth(40);
-			strikeTV.setWidth(40);
-			putBidTV.setWidth(40);
-			putAskTV.setWidth(40);
-			greekStrikeTV.setWidth(40);
-			deltaTV.setWidth(40);
-			gammaTV.setWidth(40);
-			vegaTV.setWidth(40);
-			thetaTV.setWidth(40);
-			rhoTV.setWidth(40);
-	
-		    callBidTV.setGravity(Gravity.LEFT);
-		    callAskTV.setGravity(Gravity.LEFT);
-			strikeTV.setGravity(Gravity.LEFT);
-			putBidTV.setGravity(Gravity.LEFT);
-			putAskTV.setGravity(Gravity.LEFT);
-			greekStrikeTV.setGravity(Gravity.LEFT);
-			deltaTV.setGravity(Gravity.LEFT);
-			gammaTV.setGravity(Gravity.LEFT);
-			vegaTV.setGravity(Gravity.LEFT);
-			thetaTV.setGravity(Gravity.LEFT);
-			rhoTV.setGravity(Gravity.LEFT);
+			callBidTV2.setTextSize(18);
+			callAskTV2.setTextSize(18);
+			putBidTV2.setTextSize(18);
+			putAskTV2.setTextSize(18);
+
+		    callBidTV.setGravity(Gravity.CENTER);
+		    callAskTV.setGravity(Gravity.CENTER);
+			strikeTV.setGravity(Gravity.CENTER);
+			putBidTV.setGravity(Gravity.CENTER);
+			putAskTV.setGravity(Gravity.CENTER);
+			strikeTV2.setGravity(Gravity.CENTER);
+			deltaTV.setGravity(Gravity.CENTER);
+			gammaTV.setGravity(Gravity.CENTER);
+			vegaTV.setGravity(Gravity.CENTER);
+			thetaTV.setGravity(Gravity.CENTER);
+			rhoTV.setGravity(Gravity.CENTER);
+			callBidTV2.setGravity(Gravity.CENTER);
+			callAskTV2.setGravity(Gravity.CENTER);
+			putBidTV2.setGravity(Gravity.CENTER);
+			putAskTV2.setGravity(Gravity.CENTER);
 
 			
 			if (putCall.equals("C")) {
@@ -480,28 +484,33 @@ public class OptionsActivity extends Activity implements OnClickListener {
 				double [] bidAsk = findMatchingBidAsk(p.getInstrument().getStrike(), "P");
 				putBidTV.setText(priceDF.format(bidAsk[0]));
 				putAskTV.setText(priceDF.format(bidAsk[1]));
-				greekStrikeTV.setText(strike);
+				putBidTV2.setText(priceDF.format(bidAsk[0]));
+				putAskTV2.setText(priceDF.format(bidAsk[1]));
+				strikeTV2.setText(strike);
 				deltaTV.setText(delta);
 				gammaTV.setText(gamma);
 				vegaTV.setText(vega);
 				thetaTV.setText(rho);
 				rhoTV.setText(theta);
+				callBidTV2.setText(bidPrice);
+				callAskTV2.setText(askPrice);
+
 			}
 			
 			double thisStrike = p.getInstrument().getStrike();
 			// If current strike is less than the current future price, color it green
 			if (thisStrike < currentFuturePrice) {
 				strikeTV.setTextColor(Color.GREEN);
-				greekStrikeTV.setTextColor(Color.GREEN);
+				strikeTV2.setTextColor(Color.GREEN);
 			}
 			
 			// If current strike is greater than the current future price, color it red			
 			if (thisStrike > currentFuturePrice) {
 				strikeTV.setTextColor(Color.RED);
-				greekStrikeTV.setTextColor(Color.RED);
+				strikeTV2.setTextColor(Color.RED);
 			}
 			
-			// If this strike is the closest strike, set the background color to gray
+			// If this strike is the closest strike, set the background color to gray and display the current future price
 			if (thisStrike == closestStrike) {
 				tr.setBackgroundColor(orangeBackground);
 				tr2.setBackgroundColor(orangeBackground);
@@ -516,10 +525,15 @@ public class OptionsActivity extends Activity implements OnClickListener {
 			tr.addView(gammaTV);
 			tr.addView(vegaTV);
 			
-			tr2.addView(greekStrikeTV);
+			tr2.addView(callBidTV2);
+			tr2.addView(callAskTV2);
+			tr2.addView(strikeTV2);
+			tr2.addView(putBidTV2);
+			tr2.addView(putAskTV2);
 			tr2.addView(thetaTV);
 			tr2.addView(rhoTV);
 		
+			// Following two views create a narrow gray line to act as a table row separator
 			View v = new View(this);
 			v.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, 1));
 			v.setBackgroundColor(Color.argb(255, 233, 233, 234));
