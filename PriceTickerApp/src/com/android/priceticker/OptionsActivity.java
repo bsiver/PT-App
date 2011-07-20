@@ -72,7 +72,6 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	
 	// Other global variables
 	private int rowInsCount;
-	private boolean isPortrait = true;
 	private String productChoice;
 	private double currentFuturePrice;
 
@@ -163,16 +162,11 @@ public class OptionsActivity extends Activity implements OnClickListener {
                 return false;
             }
         };
-
-        // Determine orientation of screen
-        // Do some extra UI setup if we're in landscape
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-        	isPortrait = false;
-        	dtLayout.setOnClickListener(OptionsActivity.this); 
-            dtLayout.setOnTouchListener(gestureListener);
-            dtLayout2.setOnClickListener(OptionsActivity.this); 
-            dtLayout2.setOnTouchListener(gestureListener);
-        }
+        
+    	dtLayout.setOnClickListener(OptionsActivity.this); 
+        dtLayout.setOnTouchListener(gestureListener);
+        dtLayout2.setOnClickListener(OptionsActivity.this); 
+        dtLayout2.setOnTouchListener(gestureListener);
         
         // Display welcome message to user
         AlertDialog.Builder welcomeDialog = new AlertDialog.Builder(this);
@@ -320,18 +314,6 @@ public class OptionsActivity extends Activity implements OnClickListener {
     	
     }
 
-    
-    /*
-     * populateRowsPortrait()
-     * 
-     * This is no longer used - plan to force Landscape orientation for next release
-     * 
-     */
-    public void populateRowsPortrait(ArrayList<PriceTick> pt) {
-
-    	
-    }
-    
     /*
      * populateRowsLandscape()
      * 
@@ -460,21 +442,21 @@ public class OptionsActivity extends Activity implements OnClickListener {
 			putBidTV2.setTextSize(18);
 			putAskTV2.setTextSize(18);
 
-		    callBidTV.setGravity(Gravity.CENTER);
-		    callAskTV.setGravity(Gravity.CENTER);
-			strikeTV.setGravity(Gravity.CENTER);
-			putBidTV.setGravity(Gravity.CENTER);
-			putAskTV.setGravity(Gravity.CENTER);
-			strikeTV2.setGravity(Gravity.CENTER);
-			deltaTV.setGravity(Gravity.CENTER);
-			gammaTV.setGravity(Gravity.CENTER);
-			vegaTV.setGravity(Gravity.CENTER);
-			thetaTV.setGravity(Gravity.CENTER);
-			rhoTV.setGravity(Gravity.CENTER);
-			callBidTV2.setGravity(Gravity.CENTER);
-			callAskTV2.setGravity(Gravity.CENTER);
-			putBidTV2.setGravity(Gravity.CENTER);
-			putAskTV2.setGravity(Gravity.CENTER);
+		    callBidTV.setGravity(Gravity.LEFT);
+		    callAskTV.setGravity(Gravity.LEFT);
+			strikeTV.setGravity(Gravity.LEFT);
+			putBidTV.setGravity(Gravity.LEFT);
+			putAskTV.setGravity(Gravity.LEFT);
+			strikeTV2.setGravity(Gravity.LEFT);
+			deltaTV.setGravity(Gravity.LEFT);
+			gammaTV.setGravity(Gravity.LEFT);
+			vegaTV.setGravity(Gravity.LEFT);
+			thetaTV.setGravity(Gravity.LEFT);
+			rhoTV.setGravity(Gravity.LEFT);
+			callBidTV2.setGravity(Gravity.LEFT);
+			callAskTV2.setGravity(Gravity.LEFT);
+			putBidTV2.setGravity(Gravity.LEFT);
+			putAskTV2.setGravity(Gravity.LEFT);
 
 			
 			if (putCall.equals("C")) {
@@ -532,6 +514,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
 			tr2.addView(putAskTV2);
 			tr2.addView(thetaTV);
 			tr2.addView(rhoTV);
+			tr2.addView(new TextView(this));
 		
 			// Following two views create a narrow gray line to act as a table row separator
 			View v = new View(this);
@@ -606,11 +589,6 @@ public class OptionsActivity extends Activity implements OnClickListener {
 		}
 		return closestStrike;
 	}
-
-	public boolean getOrientation() {
-    	return isPortrait;
-    }
-    
     
     public void setPTArray(ArrayList<PriceTick> pt) {
 		this.pt = pt;
@@ -668,9 +646,6 @@ public class OptionsActivity extends Activity implements OnClickListener {
             // Check to make sure the parsed array actually contains PT objects
             // If not, show an error and cancel further execution of AsyncTask
             if (pt.get(0) instanceof PriceTick) {
-	            if (act.getOrientation())
-	            	act.populateRowsPortrait(arr);
-	            else
 	            	act.populateRowsLandscape(arr);
             }
             else {

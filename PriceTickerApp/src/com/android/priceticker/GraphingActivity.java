@@ -192,7 +192,7 @@ public class GraphingActivity extends Activity implements OnTouchListener {
 			case MotionEvent.ACTION_POINTER_DOWN: // second finger
 				distBetweenFingers = spacing(event);
 				// the distance check is done to avoid false alarms
-				//if (distBetweenFingers > 5f)
+				if (distBetweenFingers > 5f)
 					mode = TWO_FINGERS_DRAG;
 				break;
 			case MotionEvent.ACTION_MOVE:
