@@ -36,7 +36,7 @@ public class PriceTickResource {
 	}
 	
 	@GET @Path("/pt/opt/eud")
-	@Produces("text/html")
+	@Produces("application/json")
 	public String getEUD() throws UnknownHostException {
 		
 		// Create MongoDB connection
