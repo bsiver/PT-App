@@ -61,77 +61,77 @@
 			<!-- Headings to specify Calls on left side and puts on right -->
 			<TableRow>
 			    <TextView android:text="Calls"    
-			        android:layout_column="0"
+			        android:layout_column="1"
 					android:textStyle="normal|bold|italic"
 					android:textColor="@color/black"
 					android:textSize="20dip"
-					android:gravity="center_horizontal">
+					android:gravity="center">
 			    </TextView>
 			    <TextView android:text="Puts"
 			        android:layout_column="3"
 			        android:textStyle="normal|bold|italic"
 					android:textColor="@color/black"
 					android:textSize="20dip"
-					android:gravity="center_horizontal">
+					android:gravity="left">
 			    </TextView>
 			 </TableRow>
 				<TableRow
 				    android:background="@color/orange_background">
 			    <TextView 
-			    	android:text="Bid"    
+			    	android:text="Bid     "    
 			        android:layout_column="0"
 					android:textColor="@color/white"
 					android:textSize="18dip"
-					android:gravity="left|center_vertical">
+					android:gravity="right">
 			    </TextView>
 			    <TextView 
-			    	android:text="Ask"    
+			    	android:text="Ask   "    
 			        android:layout_column="1"
 					android:textColor="@color/white"
 					android:textSize="18dip"
-					android:gravity="left|center_vertical">
+					android:gravity="right">
 			    </TextView>
 			    <TextView 
-			    	android:text="Strike"
+			    	android:text="Strike   "
 			        android:layout_column="2"
 					android:textColor="@color/white"
 					android:textSize="18dip"
-					android:gravity="left|center_vertical">
+					android:gravity="right">
 			    </TextView>
 			    <TextView  
-			    	android:text="Bid"
+			    	android:text="Bid      "
 			        android:layout_column="3"
 					android:textColor="@color/white"
 					android:textSize="18dip"
-					android:gravity="left|center_vertical">
+					android:gravity="right">
 			    </TextView>
 			    <TextView
-			    	android:text="Ask"
+			    	android:text="Ask          "
 			        android:layout_column="4"
 					android:textColor="@color/white"
 					android:textSize="18dip"
-					android:gravity="left|center_vertical">
+					android:gravity="right">
 			    </TextView>
 			    <TextView
-			    	android:text="Δ"
+			    	android:text="Δ      "
 			        android:layout_column="5"
 					android:textColor="@color/white"
 					android:textSize="18dip"
-					android:gravity="left|center_vertical">
+					android:gravity="right">
 			    </TextView>
 			    <TextView
-			    	android:text="Γ"
+			    	android:text="Γ     "
 			        android:layout_column="6"
 					android:textColor="@color/white"
 					android:textSize="18dip"
-					android:gravity="left|center_vertical">
+					android:gravity="right">
 			    </TextView>
 			    <TextView
-			    	android:text="ν"
+			    	android:text="ν      "
 			        android:layout_column="7"
 					android:textColor="@color/white"
 					android:textSize="18dip"
-					android:gravity="left|center_vertical">
+					android:gravity="right">
 			    </TextView>
 			    </TableRow>
 			 </TableLayout>
@@ -145,79 +145,79 @@
 			  <!-- Headings to specify Calls on left side and puts on right -->
 			<TableRow>
 			    <TextView android:text="Calls"    
-			        android:layout_column="0"
+			        android:layout_column="1"
 					android:textStyle="normal|bold|italic"
 					android:textColor="@color/black"
 					android:textSize="20dip"
-					android:gravity="center_horizontal">
+					android:gravity="center">
 			    </TextView>
 			    <TextView android:text="Puts"
 			        android:layout_column="3"
 			        android:textStyle="normal|bold|italic"
 					android:textColor="@color/black"
 					android:textSize="20dip"
-					android:gravity="center_horizontal">
+					android:gravity="left">
 			    </TextView>
 			 </TableRow>
 			<TableRow
-			    android:background="@color/orange_background">
-		    <TextView 
-		    	android:text="Bid"    
-		        android:layout_column="0"
-				android:textColor="@color/white"
-				android:textSize="18dip"
-				android:gravity="left|center_vertical">
-		    </TextView>
-		    <TextView 
-		    	android:text="Ask"    
-		        android:layout_column="1"
-				android:textColor="@color/white"
-				android:textSize="18dip"
-				android:gravity="left|center_vertical">
-		    </TextView>
-		    <TextView 
-		    	android:text="Strike"
-		        android:layout_column="2"
-				android:textColor="@color/white"
-				android:textSize="18dip"
-				android:gravity="left|center_vertical">
-		    </TextView>
-		    <TextView  
-		    	android:text="Bid"
-		        android:layout_column="3"
-				android:textColor="@color/white"
-				android:textSize="18dip"
-				android:gravity="left|center_vertical">
-		    </TextView>
-		    <TextView
-		    	android:text="Ask"
-		        android:layout_column="4"
-				android:textColor="@color/white"
-				android:textSize="18dip"
-				android:gravity="left|center_vertical">
-		    </TextView>
-		    <TextView
-		    	android:text="Θ"
-		        android:layout_column="5"
-				android:textColor="@color/white"
-				android:textSize="18dip"
-				android:gravity="left|center_vertical">
-		    </TextView>
-		    <TextView
-		    	android:text="ρ"
-		        android:layout_column="6"
-				android:textColor="@color/white"
-				android:textSize="18dip"
-				android:gravity="left|center_vertical">
-		    </TextView>
-		    <TextView
-		    	android:text=" "
-		        android:layout_column="7"
-				android:textColor="@color/white"
-				android:textSize="18dip"
-				android:gravity="left|center_vertical">
-		    </TextView>
-		    </TableRow>
+				    android:background="@color/orange_background">
+			    <TextView 
+			    	android:text="Bid     "    
+			        android:layout_column="0"
+					android:textColor="@color/white"
+					android:textSize="18dip"
+					android:gravity="right">
+			    </TextView>
+			    <TextView 
+			    	android:text="Ask   "    
+			        android:layout_column="1"
+					android:textColor="@color/white"
+					android:textSize="18dip"
+					android:gravity="right">
+			    </TextView>
+			    <TextView 
+			    	android:text="Strike   "
+			        android:layout_column="2"
+					android:textColor="@color/white"
+					android:textSize="18dip"
+					android:gravity="right">
+			    </TextView>
+			    <TextView  
+			    	android:text="Bid      "
+			        android:layout_column="3"
+					android:textColor="@color/white"
+					android:textSize="18dip"
+					android:gravity="right">
+			    </TextView>
+			    <TextView
+			    	android:text="Ask          "
+			        android:layout_column="4"
+					android:textColor="@color/white"
+					android:textSize="18dip"
+					android:gravity="right">
+			    </TextView>
+			    <TextView
+			    	android:text="Θ      "
+			        android:layout_column="5"
+					android:textColor="@color/white"
+					android:textSize="18dip"
+					android:gravity="right">
+			    </TextView>
+			    <TextView
+			    	android:text="ρ     "
+			        android:layout_column="6"
+					android:textColor="@color/white"
+					android:textSize="18dip"
+					android:gravity="right">
+			    </TextView>
+			    <TextView
+			    	android:text=""
+			        android:layout_column="7"
+					android:textColor="@color/white"
+					android:textSize="18dip"
+					android:gravity="right">
+			    </TextView>
+			   </TableRow>
 			</TableLayout>
 		    </ViewFlipper>
 		    
@@ -272,6 +272,7 @@
 		<ViewFlipper android:id="@+id/dataTableFlipper"
 	             android:layout_width="fill_parent" android:layout_height="wrap_content">
 			
+					
 				<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
 							android:layout_width="fill_parent" 
 							android:layout_height="wrap_content"

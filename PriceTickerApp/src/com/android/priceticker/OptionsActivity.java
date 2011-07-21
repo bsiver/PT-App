@@ -25,6 +25,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -442,21 +443,21 @@ public class OptionsActivity extends Activity implements OnClickListener {
 			putBidTV2.setTextSize(18);
 			putAskTV2.setTextSize(18);
 
-		    callBidTV.setGravity(Gravity.LEFT);
-		    callAskTV.setGravity(Gravity.LEFT);
-			strikeTV.setGravity(Gravity.LEFT);
-			putBidTV.setGravity(Gravity.LEFT);
-			putAskTV.setGravity(Gravity.LEFT);
-			strikeTV2.setGravity(Gravity.LEFT);
-			deltaTV.setGravity(Gravity.LEFT);
-			gammaTV.setGravity(Gravity.LEFT);
-			vegaTV.setGravity(Gravity.LEFT);
-			thetaTV.setGravity(Gravity.LEFT);
-			rhoTV.setGravity(Gravity.LEFT);
-			callBidTV2.setGravity(Gravity.LEFT);
-			callAskTV2.setGravity(Gravity.LEFT);
-			putBidTV2.setGravity(Gravity.LEFT);
-			putAskTV2.setGravity(Gravity.LEFT);
+		    callBidTV.setGravity(Gravity.RIGHT);
+		    callAskTV.setGravity(Gravity.RIGHT);
+			strikeTV.setGravity(Gravity.RIGHT);
+			putBidTV.setGravity(Gravity.RIGHT);
+			putAskTV.setGravity(Gravity.RIGHT);
+			strikeTV2.setGravity(Gravity.RIGHT);
+			deltaTV.setGravity(Gravity.RIGHT);
+			gammaTV.setGravity(Gravity.RIGHT);
+			vegaTV.setGravity(Gravity.RIGHT);
+			thetaTV.setGravity(Gravity.RIGHT);
+			rhoTV.setGravity(Gravity.RIGHT);
+			callBidTV2.setGravity(Gravity.RIGHT);
+			callAskTV2.setGravity(Gravity.RIGHT);
+			putBidTV2.setGravity(Gravity.RIGHT);
+			putAskTV2.setGravity(Gravity.RIGHT);
 
 			
 			if (putCall.equals("C")) {
@@ -705,6 +706,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
     		       });
     		AlertDialog alert = builder.create();
     		alert.show();
+    		wst.cancel(true);
         }
     }
 
