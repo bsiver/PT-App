@@ -266,7 +266,7 @@
 	
 	<!-- Data Table Display -->
 	<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-						android:id="@+id/hsv1"
+						android:id="@+id/data"
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content">
 		<ViewFlipper android:id="@+id/dataTableFlipper"

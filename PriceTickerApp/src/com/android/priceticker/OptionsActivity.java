@@ -353,7 +353,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
         for (PriceTick p: pt) {
         	
         	// If we are processing the future, set the current future price and then skip this row
-        	if (p.getInstrument().getPutcall().equals("future")) {
+        	if (p.getInstrument().getPutcall().equals("future") && p.getLatestprices().getPremium() != 0) {
         		currentFuturePrice = p.getLatestprices().getPremium();
         		futureHeader.setText("Current Future Price: " +priceDF.format(currentFuturePrice));
         		expireDate = p.getInstrument().getExpiredate();
