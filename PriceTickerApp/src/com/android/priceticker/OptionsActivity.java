@@ -1,5 +1,6 @@
 package com.android.priceticker;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.text.DecimalFormat;
@@ -11,7 +12,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,7 +25,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -114,6 +113,10 @@ public class OptionsActivity extends Activity implements OnClickListener {
     
     // Time to wait between web service calls
     private static int SLEEP_TIME_MILLIS = 1000;
+    
+    // Used for capturing webservice data
+    private static Boolean fileRecord = true;
+    FileWriter f;
 	
 	/*
 	 * onCreate()
@@ -672,6 +675,13 @@ public class OptionsActivity extends Activity implements OnClickListener {
         }
     	
         protected ArrayList<PriceTick> parseJSON(String response) {
+        	if (fileRecord) {
+	        	try { 
+	        		f = new FileWriter("/mnt/sdcard/download/"+productChoice+".txt");
+	        		f.write(response+"\nBENBENBEN");
+	        		f.close();
+	        	} catch (Exception e) { }
+        	}
         	String [] split = response.split("\n");
         	ArrayList<PriceTick> arr = new ArrayList<PriceTick>();
         	JsonParser p = new JsonParser();
