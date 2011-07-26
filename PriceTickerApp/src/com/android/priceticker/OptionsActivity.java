@@ -1,12 +1,15 @@
 package com.android.priceticker;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Scanner;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -15,6 +18,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Gravity;
@@ -84,6 +88,9 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	// AsyncTask used for making calls to web service
 	WebServiceTask wst = new WebServiceTask();
 	
+	// AsyncTask used for managing file IO
+	FileAsyncTask fst = new FileAsyncTask();
+	
 	// Gesture detection
     private static final int SWIPE_MIN_DISTANCE = 120;
     private static final int SWIPE_MAX_OFF_PATH = 250;
@@ -102,10 +109,14 @@ public class OptionsActivity extends Activity implements OnClickListener {
     private static final String welcomeMsg = "Please select a product from the drop down menu to begin\n" +
     										 "More information is available in the help activity\n" +
     										 "Press menu to see options and help";
+    
+    private static final String WEB_SERVICE_IP = "192.168.0.210";
     									
     private static final DecimalFormat priceDF = new DecimalFormat("$0");
     private static final DecimalFormat greeksDFLT1 = new DecimalFormat("###.00");
     private static final DecimalFormat greeksDFGT1 = new DecimalFormat(".00000");
+    
+    
     
     // Colors for TextViews and backgrounds
     private static final int orangeBackground = 0xAFEA8400;
@@ -114,9 +125,20 @@ public class OptionsActivity extends Activity implements OnClickListener {
     // Time to wait between web service calls
     private static int SLEEP_TIME_MILLIS = 1000;
     
-    // Used for capturing webservice data
+    
+    /* Demo File Mode related fields */
+    
+    // Time to wait between file reads (when in readFromFileMode)
+    private static int FILE_SLEEP_TIME_MILLIS = 100;
+    
+    // Used for capturing web service data
     private static Boolean fileRecord = true;
     FileWriter f;
+    
+    private static final String demoPrompt = "Connection to the database could not be established\n" +
+    										 "Would you like to enter a demo mode which displays pre-recorded sample data?";
+    
+    
 	
 	/*
 	 * onCreate()
@@ -279,6 +301,8 @@ public class OptionsActivity extends Activity implements OnClickListener {
         	productChoice = choice;
         	wst.cancel(false);
         	wst = new WebServiceTask();
+        	fst.cancel(false);
+        	fst = new FileAsyncTask();
         	if (refreshToggleButton.isChecked()) {
         		refreshToggleButton.toggle();
         	}
@@ -308,9 +332,32 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
     	
     	if (refreshToggleButton.isChecked()) {
-			// Make web service call asynchronously
+			
 	    	try {
-	    		wst.execute(productChoice);
+	    		// Check if web service is reachable
+	    		InetAddress in = InetAddress.getByName(WEB_SERVICE_IP);
+	    		if (in.isReachable(2000)) {
+	    			wst.execute(productChoice);
+	    		}
+	    		else {
+	    			// Prompt user to enter demo mode
+	    	        AlertDialog.Builder welcomeDialog = new AlertDialog.Builder(this);
+	    	        welcomeDialog.setMessage(demoPrompt)
+	    	        	.setIcon(R.drawable.ic_warning)
+	    	        	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+	    	            public void onClick(DialogInterface dialog, int id) {
+	    	            	fst.execute(productChoice);
+	    	            }
+	    	            })
+	    	        	.setNegativeButton("No", new DialogInterface.OnClickListener() {
+	    	            public void onClick(DialogInterface dialog, int id) {
+	    	                 dialog.cancel();
+	    	            }
+	    	        });
+	    	        AlertDialog welcomeMessage = welcomeDialog.create();
+	    	        welcomeMessage.show();
+	    		}
+	    		
 	    	} catch (Exception e) {}
     	}
     	else {
@@ -318,7 +365,9 @@ public class OptionsActivity extends Activity implements OnClickListener {
     	
     }
 
-    /*
+   
+
+	/*
      * populateRowsLandscape()
      * 
      * Populates the data table when phone is in landscape orientation
@@ -677,8 +726,9 @@ public class OptionsActivity extends Activity implements OnClickListener {
         protected ArrayList<PriceTick> parseJSON(String response) {
         	if (fileRecord) {
 	        	try { 
-	        		f = new FileWriter("/mnt/sdcard/download/"+productChoice+".txt");
-	        		f.write(response+"\nBENBENBEN");
+	        		f = new FileWriter("/mnt/sdcard/download/"+productChoice+".txt", true);
+	        		f.write(response);
+	        		f.write("EOL\n");
 	        		f.close();
 	        	} catch (Exception e) { }
         	}
@@ -717,6 +767,116 @@ public class OptionsActivity extends Activity implements OnClickListener {
     		AlertDialog alert = builder.create();
     		alert.show();
     		wst.cancel(true);
+        }
+    }
+	
+
+	public class FileAsyncTask extends AsyncTask<String, ArrayList<PriceTick>, String> {
+    	private ArrayList <PriceTick> arr;
+    	File sdcard = Environment.getExternalStorageDirectory();
+    	File file = new File(sdcard+"/Download/",productChoice+".txt");
+
+    	StringBuilder text = new StringBuilder();
+    	int linesRead = 0;
+
+    	@Override
+    	protected String doInBackground(String... request) {
+    		while (true) {
+	    		String response="";
+	            try { 
+	            	response =  getResponse(request[0]);
+	            } catch (Exception e) {
+	            	e.printStackTrace();
+	            }
+	            if (response.equals(MONGO_CONNECT_ERR))
+	            	return null;
+	            // If the connection could not be made, display an error
+	        	if (response==null || response.equals(MONGO_CONNECT_ERR) || 
+	        		response.equals(MONGO_EXCEPTION_ERR) || response.contains(APACHE_CONNECT_ERR)) {
+	        		showError(ERROR_CONNECT);
+	        	}
+	        	// Otherwise, parse the result and populate the data table
+	            arr = parseJSON(response);
+	            sortArray();
+	            try { Thread.sleep(FILE_SLEEP_TIME_MILLIS); } catch(Exception e) {}
+	            publishProgress(arr);
+    		}
+        }
+    	
+    	protected void onProgressUpdate(ArrayList<PriceTick>... result) {
+    		OptionsActivity act = OptionsActivity.this;
+            act.setPTArray(arr);
+            // Check to make sure the parsed array actually contains PT objects
+            // If not, show an error and cancel further execution of AsyncTask
+            if (pt.get(0) instanceof PriceTick) {
+	            	act.populateRowsLandscape(arr);
+            }
+    	}
+
+    	public String getResponse(String request) throws IOException {
+	    	File sdcard = Environment.getExternalStorageDirectory();
+	    	
+	    	File file = new File(sdcard+"/Download/",productChoice+".txt");
+
+	    	StringBuilder text = new StringBuilder();
+
+	    	try {
+	    	    Scanner sc = new Scanner(file);
+	    	    for (int ind = 0; ind < linesRead; sc.nextLine(), ind++);
+	    	    while (true) {
+	    	    	String line="";
+	    	    	if (sc.hasNextLine())
+	    	    		line = sc.nextLine();
+	    	    	else break;
+	    	    	linesRead++;
+	    	    	if (line.equals("EOL")) break;
+	    	        text.append(line);
+	    	        text.append("\n");
+	    	        
+	    	    }
+	    	}
+	    	catch (IOException e) {
+	    	}
+	    	
+            return text.toString();
+        }
+    	
+        protected ArrayList<PriceTick> parseJSON(String response) {
+        	String [] split = response.split("\n");
+        	ArrayList<PriceTick> arr = new ArrayList<PriceTick>();
+        	JsonParser p = new JsonParser();
+        	for (int ind = 0; ind < split.length; ind++) {
+        		PriceTick pt = gson.fromJson(p.parse(split[ind]), PriceTick.class);
+        		arr.add(pt);
+        	}
+        	return arr;
+        }
+        
+        protected void sortArray() {
+        	// Sort based on strike (descending)
+    	    Collections.sort(arr);
+    	    Collections.reverse(arr);
+        }
+
+        private void showError(String msg) {
+    		AlertDialog.Builder builder = new AlertDialog.Builder(OptionsActivity.this);
+    		builder.setMessage(msg)
+    		       .setCancelable(false)
+    		       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+    		           @Override
+					public void onClick(DialogInterface dialog, int id) {
+    		                OptionsActivity.this.finish();
+    		           }
+    		       })
+    		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+    		           @Override
+					public void onClick(DialogInterface dialog, int id) {
+    		                dialog.cancel();
+    		           }
+    		       });
+    		AlertDialog alert = builder.create();
+    		alert.show();
+    		fst.cancel(true);
         }
     }
 
