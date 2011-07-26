@@ -331,7 +331,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
     @Override
 	public void onClick(View v) {
     	
-    	if (refreshToggleButton.isChecked()) {
+    	if (refreshToggleButton.isChecked() && v.equals(refreshToggleButton)) {
 			
 	    	try {
 	    		// Check if web service is reachable
