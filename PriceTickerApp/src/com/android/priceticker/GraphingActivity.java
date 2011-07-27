@@ -7,6 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Bundle;
@@ -296,8 +297,8 @@ public class GraphingActivity extends Activity implements OnTouchListener {
             	Toast.makeText(this, "Already in Graphing View!", Toast.LENGTH_SHORT).show();   
                 break;
             case R.id.helpIcon: 
-            	Toast.makeText(this, "Launch Help Activity", Toast.LENGTH_SHORT).show();
-                break;
+            	Intent myIntent = new Intent(GraphingActivity.this, HelpActivity.class);
+            	GraphingActivity.this.startActivity(myIntent);
             case R.id.exitIcon: 
             	java.lang.System.exit(0);                             
         }

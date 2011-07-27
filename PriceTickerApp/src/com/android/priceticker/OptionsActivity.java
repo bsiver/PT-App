@@ -42,6 +42,7 @@ import android.widget.ViewFlipper;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.MalformedJsonException;
 
 
 /****************************************************
@@ -129,14 +130,14 @@ public class OptionsActivity extends Activity implements OnClickListener {
     /* Demo File Mode related fields */
     
     // Time to wait between file reads (when in readFromFileMode)
-    private static int FILE_SLEEP_TIME_MILLIS = 100;
+    private static int FILE_SLEEP_TIME_MILLIS = 1000;
     
     // Used for capturing web service data
-    private static Boolean fileRecord = true;
+    private static Boolean fileRecord = false;
     FileWriter f;
     
     private static final String demoPrompt = "Connection to the database could not be established\n" +
-    										 "Would you like to enter a demo mode which displays pre-recorded sample data?";
+    										 "Would you like to enter a demo mode which displays previously recorded sample data?";
     
     
 	
@@ -275,7 +276,8 @@ public class OptionsActivity extends Activity implements OnClickListener {
             	else Toast.makeText(this, ERROR_NO_PRODUCT, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.helpIcon: 
-            	Toast.makeText(this, "Launch Help Activity", Toast.LENGTH_SHORT).show();
+            	Intent myIntent = new Intent(OptionsActivity.this, HelpActivity.class);
+            	OptionsActivity.this.startActivity(myIntent);
                 break;
             case R.id.exitIcon:
             	System.exit(0);
@@ -343,6 +345,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	    			// Prompt user to enter demo mode
 	    	        AlertDialog.Builder welcomeDialog = new AlertDialog.Builder(this);
 	    	        welcomeDialog.setMessage(demoPrompt)
+	    	        	.setTitle("Demo Mode")
 	    	        	.setIcon(R.drawable.ic_warning)
 	    	        	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 	    	            public void onClick(DialogInterface dialog, int id) {
@@ -360,7 +363,9 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	    		
 	    	} catch (Exception e) {}
     	}
-    	else {
+    	else if (!refreshToggleButton.isChecked() && v.equals(refreshToggleButton)) {
+    		fst.cancel(false);
+    		fst = new FileAsyncTask();
     	}
     	
     }
@@ -688,8 +693,8 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	        	// Otherwise, parse the result and populate the data table
 	            arr = parseJSON(response);
 	            sortArray();
-	            try { Thread.sleep(SLEEP_TIME_MILLIS); } catch(Exception e) {}
 	            publishProgress(arr);
+	            try { Thread.sleep(SLEEP_TIME_MILLIS); } catch(Exception e) {}
     		}
         }
     	
@@ -736,7 +741,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
         	ArrayList<PriceTick> arr = new ArrayList<PriceTick>();
         	JsonParser p = new JsonParser();
         	for (int ind = 0; ind < split.length; ind++) {
-        		PriceTick pt = gson.fromJson(p.parse(split[ind]), PriceTick.class);
+        		PriceTick pt = gson.fromJson(p.parse(split[ind]), PriceTick.class); 
         		arr.add(pt);
         	}
         	return arr;
@@ -798,8 +803,8 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	        	// Otherwise, parse the result and populate the data table
 	            arr = parseJSON(response);
 	            sortArray();
-	            try { Thread.sleep(FILE_SLEEP_TIME_MILLIS); } catch(Exception e) {}
 	            publishProgress(arr);
+	            try { Thread.sleep(FILE_SLEEP_TIME_MILLIS); } catch(Exception e) {}
     		}
         }
     	
@@ -827,7 +832,10 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	    	    	String line="";
 	    	    	if (sc.hasNextLine())
 	    	    		line = sc.nextLine();
-	    	    	else break;
+	    	    	else {
+	    	    		fst.cancel(false);
+	    	    		fst = new FileAsyncTask();
+	    	    	}
 	    	    	linesRead++;
 	    	    	if (line.equals("EOL")) break;
 	    	        text.append(line);

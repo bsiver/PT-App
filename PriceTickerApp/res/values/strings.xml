@@ -2,7 +2,8 @@
 <resources>
 	<string name="app_name">Price Ticker</string>
 	<string name="options_name">Options</string>
-	<string name="futures_name">Graphing</string>
+	<string name="graphing_name">Graphing</string>
+	<string name="help_name">Help</string>
 	<string name="labelProduct">Product:</string>
 	
 	<string name="product_prompt">Select a Product</string>

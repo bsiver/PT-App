@@ -22,7 +22,11 @@
             </intent-filter>
         </activity>
         <activity android:name="GraphingActivity"
-		          android:label="@string/futures_name"
+		          android:label="@string/graphing_name"
+		          android:screenOrientation="landscape">
+		</activity>
+		<activity android:name="HelpActivity"
+		          android:label="@string/help_name"
 		          android:screenOrientation="landscape">
 		</activity>
     </application>
