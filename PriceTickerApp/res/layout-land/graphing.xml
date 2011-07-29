@@ -1,13 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_margin="25dip">
- 
+    android:layout_height="fill_parent">
+    
+    	<TextView android:id="@+id/checkBoxLabel"
+    	android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="5dip"
+        android:text="Whatchou wanna graph, yo?"/>
+    
+    	<CheckBox android:id="@+id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/checkBoxLabel"
+        android:paddingRight="5dip"
+        android:text="trufula trees" />
+    
+    	<CheckBox android:id="@+id/checkbox2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/checkbox"
+        android:layout_below="@id/checkBoxLabel"
+        android:paddingRight="5dip"
+        android:text="cupcakes" />
+        
+        <CheckBox android:id="@+id/checkbox3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/checkbox2"
+        android:layout_below="@id/checkBoxLabel"
+        android:paddingRight="5dip"
+        android:text="widgets" />
+        
+        <CheckBox android:id="@+id/checkbox4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/checkbox3"
+        android:layout_below="@id/checkBoxLabel"
+        android:paddingRight="5dip"
+        android:text="frozen pork bellies... ew" />
+        
+        <CheckBox android:id="@+id/checkbox5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/checkbox4"
+        android:layout_below="@id/checkBoxLabel"
+        android:paddingRight="5dip"
+        android:text="kittens" />
+        
+         <Button android:id="@+id/goButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/checkbox5"
+        android:layout_below="@id/checkBoxLabel"
+        android:paddingRight="5dip"
+        android:text="Bam!" />
+        
+    
 	    <com.androidplot.xy.XYPlot
 	    android:id="@+id/mySimpleXYPlot"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    title="Bid/Ask Versus Strike"/>
-</LinearLayout>
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@id/checkbox"
+	    title=" "/>
+	    
+</RelativeLayout>

@@ -46,7 +46,7 @@ import com.google.gson.stream.MalformedJsonException;
 
 
 /****************************************************
- * Price Ticker App - Options Activity
+ * Price Ticker App - Options Activity (Main)
  * 
  * @author Ben Siver
  * @date 5/9/2011
@@ -54,8 +54,12 @@ import com.google.gson.stream.MalformedJsonException;
  * This activity represents the initial screen of the Price Ticker App.
  * Users are presented with a drop down menu of four product choices.
  * Upon selecting a product and pressing "Go", a timer is initiated 
- * that calls a web service periodically.  The UI is updated at a 
- * regular interval with ticker information sent from the web service.  
+ * that calls a web service periodically.  If the web servce is unreachable,
+ * the user is prompted to enter a demonstration mode.  The demo mode
+ * attempts to read from some pre-recorded data files located on the
+ * devices SD card, simulating data streaming in from the web service.
+ * If the web service is accessible, the UI is updated at a regular
+ * interval with ticker information sent from the web service.  
  * At any time, the user can select to launch the Graphing activity from
  * the menu which sends the data currently being displayed to another
  * activity which then handles plotting.
@@ -103,15 +107,17 @@ public class OptionsActivity extends Activity implements OnClickListener {
     private static final String ERROR_NO_ROWS = "Error: It appears the database has no entries\nWould you like to exit?";
     private static final String ERROR_CONNECT = "Connection to database timed out.\nWould you like to exit?";
     private static final String ERROR_NO_PRODUCT = "Please choose a product type before graphing";
-    private static final String MONGO_CONNECT_ERR = "Error connecting to MongoDB!";
+    private static final String MONGO_CONNECT_ERR = "Connection to";
     private static final String MONGO_EXCEPTION_ERR = "Exception while processing request";
     private static final String APACHE_CONNECT_ERR = "Apache Tomcat/6.0.28 - Error";
+    private static final String RESOLV_ERR = "Connection to the database could not be established\n";
     
     private static final String welcomeMsg = "Please select a product from the drop down menu to begin\n" +
     										 "More information is available in the help activity\n" +
     										 "Press menu to see options and help";
     
     private static final String WEB_SERVICE_IP = "192.168.0.210";
+    
     									
     private static final DecimalFormat priceDF = new DecimalFormat("$0");
     private static final DecimalFormat greeksDFLT1 = new DecimalFormat("###.00");
@@ -136,11 +142,8 @@ public class OptionsActivity extends Activity implements OnClickListener {
     private static Boolean fileRecord = false;
     FileWriter f;
     
-    private static final String demoPrompt = "Connection to the database could not be established\n" +
-    										 "Would you like to enter a demo mode which displays previously recorded sample data?";
-    
-    
-	
+    private static final String demoPrompt = "Would you like to enter a demo mode which displays previously recorded sample data?";
+
 	/*
 	 * onCreate()
 	 *
@@ -153,7 +156,6 @@ public class OptionsActivity extends Activity implements OnClickListener {
         
         // Set custom title bar
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, 0);
         
         setContentView(R.layout.options);
        
@@ -301,18 +303,26 @@ public class OptionsActivity extends Activity implements OnClickListener {
             // Get & set the user's product choice
         	String choice = parent.getItemAtPosition(pos).toString();
         	productChoice = choice;
+        	
+        	// Kill & renew AsyncTasks
         	wst.cancel(false);
         	wst = new WebServiceTask();
         	fst.cancel(false);
         	fst = new FileAsyncTask();
-        	if (refreshToggleButton.isChecked()) {
-        		refreshToggleButton.toggle();
-        	}
+        	
+        	// Clear data views
         	futureHeader.setText("");
         	expireDateHeader.setText("");
         	closestStrikeHeader.setText("");
         	dtLayout.removeAllViews();
         	dtLayout2.removeAllViews();
+        	
+        	// Start refreshing new product choice
+        	if (refreshToggleButton.isChecked()) {
+        		wst.execute(productChoice);
+        	}
+        	
+        	
         }
 
         @Override
@@ -324,7 +334,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
     /*
      * onClick
      * 
-     * Listener for the clickable elements in the UI (Go button)
+     * Listener for the clickable elements in the UI
      *       
      * Executes the web service task with the current product choice
      *   
@@ -343,22 +353,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	    		}
 	    		else {
 	    			// Prompt user to enter demo mode
-	    	        AlertDialog.Builder welcomeDialog = new AlertDialog.Builder(this);
-	    	        welcomeDialog.setMessage(demoPrompt)
-	    	        	.setTitle("Demo Mode")
-	    	        	.setIcon(R.drawable.ic_warning)
-	    	        	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-	    	            public void onClick(DialogInterface dialog, int id) {
-	    	            	fst.execute(productChoice);
-	    	            }
-	    	            })
-	    	        	.setNegativeButton("No", new DialogInterface.OnClickListener() {
-	    	            public void onClick(DialogInterface dialog, int id) {
-	    	                 dialog.cancel();
-	    	            }
-	    	        });
-	    	        AlertDialog welcomeMessage = welcomeDialog.create();
-	    	        welcomeMessage.show();
+	    			demoPrompt("Connection to the database could not be established");
 	    		}
 	    		
 	    	} catch (Exception e) {}
@@ -366,6 +361,8 @@ public class OptionsActivity extends Activity implements OnClickListener {
     	else if (!refreshToggleButton.isChecked() && v.equals(refreshToggleButton)) {
     		fst.cancel(false);
     		fst = new FileAsyncTask();
+    		wst.cancel(false);
+    		wst = new WebServiceTask();
     	}
     	
     }
@@ -385,13 +382,18 @@ public class OptionsActivity extends Activity implements OnClickListener {
      *		Strike
      *		Put Bid
      *      Put Ask
-     *     
-     * The respective columns in landscape mode tab 2 are:
-     * 		Δ Delta
+     *      Δ Delta
      *      Γ Gamma 
      *		ν Vega
-     *		Θ Theta 	
-     *		ρ Rho
+     *     
+     * The respective columns in landscape mode tab 2 are:
+     * 		Call Bid
+     *		Call Ask
+     *		Strike
+     *		Put Bid
+     *      Put Ask
+     *      Θ Theta
+     *      ρ Rho
      *
      */
     public void populateRowsLandscape(ArrayList<PriceTick> pt) {	
@@ -648,6 +650,49 @@ public class OptionsActivity extends Activity implements OnClickListener {
 		return closestStrike;
 	}
     
+
+    private void showError(String msg) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(msg)
+		       .setCancelable(false)
+		       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+		           @Override
+				public void onClick(DialogInterface dialog, int id) {
+		        	   OptionsActivity.this.finish();
+		           }
+		       })
+		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+		           @Override
+				public void onClick(DialogInterface dialog, int id) {
+		                dialog.cancel();
+		           }
+		       });
+		AlertDialog alert = builder.create();
+		alert.show();
+		wst.cancel(true);
+    }
+    
+    public void demoPrompt(String msg) {
+    	AlertDialog.Builder welcomeDialog = new AlertDialog.Builder(this);
+        welcomeDialog.setMessage(msg+"\n"+demoPrompt)
+        	.setTitle("Demo Mode")
+        	.setIcon(R.drawable.ic_warning)
+        	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            	fst.execute(productChoice);
+            }
+            })
+        	.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                 dialog.cancel();
+	    		 if (refreshToggleButton.isChecked())
+	    			 refreshToggleButton.toggle();
+            }
+        });
+        AlertDialog welcomeMessage = welcomeDialog.create();
+        welcomeMessage.show();
+    }
+    
     public void setPTArray(ArrayList<PriceTick> pt) {
 		this.pt = pt;
 	}
@@ -660,8 +705,8 @@ public class OptionsActivity extends Activity implements OnClickListener {
     /*
      * class WebServiceTask
      * 
-     * This class provides an implementation of AsyncTask that continuously polls an
-     * instance of MongoDB for new data.  The sleep interval is set as the static
+     * This class provides an implementation of AsyncTask that continuously polls a
+     * MongoDB server for new data.  The sleep interval is set as the static
      * constant SLEEP_TIME_MILLIS.  The AsyncTask runs in an infinite loop until it is
      * canceled by the user turning off auto refresh or when a new product type is selected.
      * 
@@ -681,14 +726,14 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	            try { 
 	            	response =  getResponse(request[0]);
 	            } catch (Exception e) {
-	            	e.printStackTrace();
+	            	return RESOLV_ERR;
 	            }
 	            if (response.equals(MONGO_CONNECT_ERR))
-	            	return null;
+	            	return RESOLV_ERR;
 	            // If the connection could not be made, display an error
 	        	if (response==null || response.equals(MONGO_CONNECT_ERR) || 
 	        		response.equals(MONGO_EXCEPTION_ERR) || response.contains(APACHE_CONNECT_ERR)) {
-	        		showError(ERROR_CONNECT);
+	        		return RESOLV_ERR;
 	        	}
 	        	// Otherwise, parse the result and populate the data table
 	            arr = parseJSON(response);
@@ -697,6 +742,10 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	            try { Thread.sleep(SLEEP_TIME_MILLIS); } catch(Exception e) {}
     		}
         }
+    	
+    	protected void onPostExecute(String error) {
+    		demoPrompt(error);
+    	}
     	
     	protected void onProgressUpdate(ArrayList<PriceTick>... result) {
     		OptionsActivity act = OptionsActivity.this;
@@ -753,26 +802,6 @@ public class OptionsActivity extends Activity implements OnClickListener {
     	    Collections.reverse(arr);
         }
 
-        private void showError(String msg) {
-    		AlertDialog.Builder builder = new AlertDialog.Builder(OptionsActivity.this);
-    		builder.setMessage(msg)
-    		       .setCancelable(false)
-    		       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-    		           @Override
-					public void onClick(DialogInterface dialog, int id) {
-    		                OptionsActivity.this.finish();
-    		           }
-    		       })
-    		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
-    		           @Override
-					public void onClick(DialogInterface dialog, int id) {
-    		                dialog.cancel();
-    		           }
-    		       });
-    		AlertDialog alert = builder.create();
-    		alert.show();
-    		wst.cancel(true);
-        }
     }
 	
 
