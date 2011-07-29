@@ -22,10 +22,10 @@ public class PriceTickResource {
 	private static final String collName = "banana";
 	
 	// Threshold for strikes above/below current futures price
-	private static final double EUD_STRIKE_RANGE = 50;
-	private static final double CORN_STRIKE_RANGE = 500;
-	private static final double OIL_STRIKE_RANGE = 500;
-	private static final double TY_STRIKE_RANGE = 50;
+	private static final double EUD_STRIKE_RANGE = 55;
+	private static final double CORN_STRIKE_RANGE = 55;
+	private static final double OIL_STRIKE_RANGE = 750;
+	private static final double TY_STRIKE_RANGE = 55;
 	
 	Mongo m;
 	
@@ -36,7 +36,7 @@ public class PriceTickResource {
 	}
 	
 	@GET @Path("/pt/opt/eud")
-	@Produces("application/json")
+	@Produces("text/html")
 	public String getEUD() throws UnknownHostException {
 		
 		// Create MongoDB connection
@@ -64,7 +64,7 @@ public class PriceTickResource {
 			BasicBSONObject instrument = (BasicBSONObject) current.get("instrument");
 			BasicBSONObject latestprices = (BasicBSONObject) current.get("latestprices");
 			// If we are processing the future, set the future price
-			if (instrument.get("putcall").equals("future")) {
+			if (instrument.get("putcall").equals("future") && !latestprices.get("premium").equals(Double.valueOf(0))) {
 				futurePrice = Double.parseDouble(latestprices.get("premium").toString());
 				result+=current.toString()+"\n";
 			}
@@ -107,7 +107,7 @@ public class PriceTickResource {
 			BasicBSONObject instrument = (BasicBSONObject) current.get("instrument");
 			BasicBSONObject latestprices = (BasicBSONObject) current.get("latestprices");
 			// If we are processing the future, set the future price
-			if (instrument.get("putcall").equals("future")) {
+			if (instrument.get("putcall").equals("future") && !latestprices.get("premium").equals(Double.valueOf(0))) {
 				futurePrice = Double.parseDouble(latestprices.get("premium").toString());
 				result+=current.toString()+"\n";
 			}
@@ -150,7 +150,7 @@ public class PriceTickResource {
 			BasicBSONObject instrument = (BasicBSONObject) current.get("instrument");
 			BasicBSONObject latestprices = (BasicBSONObject) current.get("latestprices");
 			// If we are processing the future, set the future price
-			if (instrument.get("putcall").equals("future")) {
+			if (instrument.get("putcall").equals("future") && !latestprices.get("premium").equals(Double.valueOf(0))) {
 				futurePrice = Double.parseDouble(latestprices.get("premium").toString());
 				result+=current.toString()+"\n";
 			}
@@ -193,7 +193,7 @@ public class PriceTickResource {
 			BasicBSONObject instrument = (BasicBSONObject) current.get("instrument");
 			BasicBSONObject latestprices = (BasicBSONObject) current.get("latestprices");
 			// If we are processing the future, set the future price
-			if (instrument.get("putcall").equals("future")) {
+			if (instrument.get("putcall").equals("future") && !latestprices.get("premium").equals(Double.valueOf(0))) {
 				futurePrice = Double.parseDouble(latestprices.get("premium").toString());
 				result+=current.toString()+"\n";
 			}
