@@ -2,13 +2,13 @@ package com.android.priceticker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.FloatMath;
@@ -17,12 +17,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
+import com.androidplot.xy.XValueMarker;
 import com.androidplot.xy.XYPlot;
 
 /****************************************************
@@ -42,14 +45,19 @@ import com.androidplot.xy.XYPlot;
  *****************************************************
  */
 
-public class GraphingActivity extends Activity implements OnTouchListener {
+public class GraphingActivity extends Activity implements OnTouchListener, OnClickListener {
 	private XYPlot mySimpleXYPlot;
-	private Random random;
 	
 	private SimpleXYSeries callBidVsStrike;
 	private SimpleXYSeries callAskVsStrike;
 	private SimpleXYSeries putBidVsStrike;
 	private SimpleXYSeries putAskVsStrike;
+	private SimpleXYSeries deltaVsStrike;
+	private SimpleXYSeries gammaVsStrike;
+	private SimpleXYSeries thetaVsStrike;
+	private SimpleXYSeries vegaVsStrike;
+	private SimpleXYSeries rhoVsStrike;
+	
 	private PointF minXY;
 	private PointF maxXY;
 	private float absMinX;
@@ -57,6 +65,30 @@ public class GraphingActivity extends Activity implements OnTouchListener {
 	private float minNoError;
 	private float maxNoError;
 	private double minDif;
+	
+	private CheckBox checkbox1;
+	private CheckBox checkbox2;
+	private CheckBox checkbox3;
+	private CheckBox checkbox4;
+	private CheckBox checkbox5;
+	private CheckBox checkbox6;
+	private CheckBox checkbox7;
+	private CheckBox checkbox8;
+	private CheckBox checkbox9;
+	
+	// Storage for table data sent over from OptionsActivity
+	private ArrayList<Double> putBidSeries;
+    private ArrayList<Double> putAskSeries;
+    private ArrayList<Double> strikeSeries;
+    private ArrayList<Double> callBidSeries;
+    private ArrayList<Double> callAskSeries;
+    private ArrayList<Double> deltaSeries;
+    private ArrayList<Double> gammaSeries;
+    private ArrayList<Double> vegaSeries;
+    private ArrayList<Double> thetaSeries;
+    private ArrayList<Double> rhoSeries;
+    private double futuresPrice;
+    
 	
 	final private double difPadding = 0.0;
 	 
@@ -66,18 +98,43 @@ public class GraphingActivity extends Activity implements OnTouchListener {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.graphing);
-                
+        
+        checkbox1 = (CheckBox) findViewById(R.id.checkbox1);
+        checkbox2 = (CheckBox) findViewById(R.id.checkbox2);
+        checkbox3 = (CheckBox) findViewById(R.id.checkbox3);
+        checkbox4 = (CheckBox) findViewById(R.id.checkbox4);
+        checkbox5 = (CheckBox) findViewById(R.id.checkbox5);
+        checkbox6 = (CheckBox) findViewById(R.id.checkbox6);
+        checkbox7 = (CheckBox) findViewById(R.id.checkbox7);
+        checkbox8 = (CheckBox) findViewById(R.id.checkbox8);
+        checkbox9 = (CheckBox) findViewById(R.id.checkbox9);
+        
+        checkbox1.setOnClickListener(this);
+        checkbox2.setOnClickListener(this);
+        checkbox3.setOnClickListener(this);
+        checkbox4.setOnClickListener(this);
+        checkbox5.setOnClickListener(this);
+        checkbox6.setOnClickListener(this);
+        checkbox7.setOnClickListener(this);
+        checkbox8.setOnClickListener(this);
+        checkbox9.setOnClickListener(this);
+        
         // Retrieve and unpackage graphing data sent from Options activity
         HashMap<String, ArrayList<Double>> serializableExtra = (HashMap<String, ArrayList<Double>>) getIntent().getSerializableExtra("pt");
 		HashMap<String, ArrayList<Double>> hm = serializableExtra;
-        ArrayList<Double> putBidSeries = hm.get("bidPut");
-        ArrayList<Double> putAskSeries = hm.get("askPut");
-        ArrayList<Double> putStrikeSeries = hm.get("strikePut");
-        
-        ArrayList<Double> callBidSeries = hm.get("bidCall");
-        ArrayList<Double> callAskSeries = hm.get("askCall");
-        ArrayList<Double> callStrikeSeries = hm.get("strikeCall");
-        
+		putBidSeries = hm.get("bidPut");
+		putAskSeries = hm.get("askPut");
+	    strikeSeries = hm.get("strikePut");
+	    callBidSeries = hm.get("bidCall");
+	    callAskSeries = hm.get("askCall");
+	    deltaSeries = hm.get("deltaCall");
+	    gammaSeries = hm.get("gammaCall");
+	    vegaSeries = hm.get("vegaCall");
+	    thetaSeries = hm.get("thetaCall");
+	    rhoSeries = hm.get("rhoCall");
+	    futuresPrice = getIntent().getExtras().getDouble("futuresPrice");
+	    Toast.makeText(GraphingActivity.this, futuresPrice+"", Toast.LENGTH_SHORT).show();
+	    
         // Initialize our XYPlot reference:
         mySimpleXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
         mySimpleXYPlot.setOnTouchListener(this);
@@ -85,38 +142,103 @@ public class GraphingActivity extends Activity implements OnTouchListener {
         
  
         // Turn the above ArrayLists into XYSeries:
-       callBidVsStrike = new SimpleXYSeries(
-                callStrikeSeries,          // SimpleXYSeries takes a List so turn our array into a List
-                callBidSeries, // Y_VALS_ONLY means use the element index as the x value
-                "Call Bid");                             // Set the display title of the series
-       
-      callAskVsStrike = new SimpleXYSeries(
-               callStrikeSeries,          // SimpleXYSeries takes a List so turn our array into a List
-               callAskSeries, // Y_VALS_ONLY means use the element index as the x value
-               "Call Ask");                             // Set the display title of the series
-       
-       putAskVsStrike = new SimpleXYSeries(
-               putStrikeSeries,          // SimpleXYSeries takes a List so turn our array into a List
-               putAskSeries, // Y_VALS_ONLY means use the element index as the x value
-               "Put Ask");                             // Set the display title of the series
-       
-       putBidVsStrike = new SimpleXYSeries(
-               putStrikeSeries,          // SimpleXYSeries takes a List so turn our array into a List
-               putBidSeries, // Y_VALS_ONLY means use the element index as the x value
-               "Put Bid");   
-             
-        // Add series1 to the xyplot:
-        mySimpleXYPlot.addSeries(callBidVsStrike, randomLPFormatter2());
-        mySimpleXYPlot.addSeries(putBidVsStrike, randomLPFormatter());
-        mySimpleXYPlot.addSeries(callAskVsStrike, randomLPFormatter2());
-        mySimpleXYPlot.addSeries(putAskVsStrike, randomLPFormatter());
+        callBidVsStrike = new SimpleXYSeries(strikeSeries, callBidSeries, "Call Bid");
+        callAskVsStrike = new SimpleXYSeries(strikeSeries, callAskSeries, "Call Ask");
+        putAskVsStrike = new SimpleXYSeries(strikeSeries, putAskSeries, "Put Ask");
+        putBidVsStrike = new SimpleXYSeries(strikeSeries, putBidSeries, "Put Bid");
+        deltaVsStrike = new SimpleXYSeries(strikeSeries, deltaSeries, "Delta");
+        gammaVsStrike = new SimpleXYSeries(strikeSeries, gammaSeries, "Gamma");
+        vegaVsStrike = new SimpleXYSeries(strikeSeries, vegaSeries, "Vega");
+        thetaVsStrike = new SimpleXYSeries(strikeSeries, thetaSeries, "Theta");
+        rhoVsStrike = new SimpleXYSeries(strikeSeries, rhoSeries, "Rho");
+        
+        XValueMarker futuresMarker = new XValueMarker(futuresPrice, "Current Future Price");
+        Paint greenPaint = new Paint();
+        greenPaint.setColor(Color.GREEN);
+        Paint blackPaint = new Paint();
+        blackPaint.setColor(Color.BLACK);
+        futuresMarker.setLinePaint(greenPaint);
+        futuresMarker.setTextPaint(blackPaint);
+
+        mySimpleXYPlot.addMarker(futuresMarker);
         
         mySimpleXYPlot.setDomainLabel("Strike Price ($)");
-        mySimpleXYPlot.setRangeLabel("Bid/Ask Price ($)");
         
         //Enact all changes
 		mySimpleXYPlot.redraw();
+
+    }
+    
+
+	@Override
+	public void onClick(View v) {
+        if (((CheckBox) v).isChecked()) {
+            addSeries((CheckBox) v);
+        } else {
+            removeSeries((CheckBox) v);
+        }
+    }
+    
+	private void addSeries(CheckBox v) {
+		String whichValue = v.getText().toString();
+		Toast.makeText(GraphingActivity.this, whichValue + " selected", Toast.LENGTH_SHORT).show();
 		
+		if (whichValue.equals("Call Bid"))
+			mySimpleXYPlot.addSeries(callBidVsStrike, myLPFormatter(Color.RED));
+		if (whichValue.equals("Call Ask"))
+			mySimpleXYPlot.addSeries(callAskVsStrike, myLPFormatter(Color.RED));
+		if (whichValue.equals("Put Bid"))
+			mySimpleXYPlot.addSeries(putBidVsStrike, myLPFormatter(Color.RED));
+		if (whichValue.equals("Put Ask"))
+			mySimpleXYPlot.addSeries(putAskVsStrike, myLPFormatter(Color.RED));
+		if (whichValue.equals("Delta"))
+			mySimpleXYPlot.addSeries(deltaVsStrike, myLPFormatter(Color.RED));
+		if (whichValue.equals("Gamma"))
+			mySimpleXYPlot.addSeries(gammaVsStrike, myLPFormatter(Color.RED));
+		if (whichValue.equals("Vega"))
+			mySimpleXYPlot.addSeries(vegaVsStrike, myLPFormatter(Color.RED));
+		if (whichValue.equals("Theta"))
+			mySimpleXYPlot.addSeries(thetaVsStrike, myLPFormatter(Color.RED));
+		if (whichValue.equals("Rho"))
+			mySimpleXYPlot.addSeries(rhoVsStrike, myLPFormatter(Color.RED));
+		
+		calculateTouchValues();
+
+		//Enact all changes
+		mySimpleXYPlot.redraw();
+		
+	}
+	
+	private void removeSeries(CheckBox v) {
+		String whichValue = v.getText().toString();
+		Toast.makeText(GraphingActivity.this, whichValue + " unselected", Toast.LENGTH_SHORT).show();
+		
+		if (whichValue.equals("Call Bid"))
+			mySimpleXYPlot.removeSeries(callBidVsStrike);
+		if (whichValue.equals("Call Ask"))
+			mySimpleXYPlot.removeSeries(callAskVsStrike);
+		if (whichValue.equals("Put Bid"))
+			mySimpleXYPlot.removeSeries(putBidVsStrike);
+		if (whichValue.equals("Put Ask"))
+			mySimpleXYPlot.removeSeries(putAskVsStrike);
+		if (whichValue.equals("Delta"))
+			mySimpleXYPlot.removeSeries(deltaVsStrike);
+		if (whichValue.equals("Gamma"))
+			mySimpleXYPlot.removeSeries(gammaVsStrike);
+		if (whichValue.equals("Vega"))
+			mySimpleXYPlot.removeSeries(vegaVsStrike);
+		if (whichValue.equals("Theta"))
+			mySimpleXYPlot.removeSeries(thetaVsStrike);
+		if (whichValue.equals("Rho"))
+			mySimpleXYPlot.removeSeries(rhoVsStrike);
+		
+		calculateTouchValues();
+		
+		//Enact all changes
+		mySimpleXYPlot.redraw();
+	}
+	
+	public void calculateTouchValues() {
 		//Set of internal variables for keeping track of the boundaries
 		mySimpleXYPlot.calculateMinMaxVals();
 		minXY = new PointF(mySimpleXYPlot.getCalculatedMinX().floatValue(),
@@ -146,10 +268,10 @@ public class GraphingActivity extends Activity implements OnTouchListener {
 			temp2 = temp3;
 		}
 		minDif = minDif + difPadding; //with padding, the minimum difference
-    }
-    
-    
- // Definition of the touch states
+		
+	}
+
+	// Definition of the touch states
 	static final private int NONE = 0;
 	static final private int ONE_FINGER_DRAG = 1;
 	static final private int TWO_FINGERS_DRAG = 2;
@@ -261,26 +383,13 @@ public class GraphingActivity extends Activity implements OnTouchListener {
 		mySimpleXYPlot.setDomainBoundaries(minXY.x, maxXY.x, BoundaryMode.AUTO);
 	}
     
-    public LineAndPointFormatter randomLPFormatter() {
+    public LineAndPointFormatter myLPFormatter(int c) {
     	
-        LineAndPointFormatter lpFormatter = new LineAndPointFormatter(
-        		
-                Color.RED, Color.RED, Color.RED);
+        LineAndPointFormatter lpFormatter = new LineAndPointFormatter(c, c, c);
         lpFormatter.setFillPaint(null);
         return lpFormatter;
     }
     
- public LineAndPointFormatter randomLPFormatter2() {
-    	
-        LineAndPointFormatter lpFormatter = new LineAndPointFormatter(
-        		
-                Color.BLACK, Color.BLACK, Color.BLACK);
-        lpFormatter.setFillPaint(null);
-        return lpFormatter;
-    }
-    
-
-	
 	// Called when user clicks menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -304,5 +413,6 @@ public class GraphingActivity extends Activity implements OnTouchListener {
         }
         return true;
     }
+
 
 }

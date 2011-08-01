@@ -273,6 +273,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
             	if (pt != null) {
 	            	Intent myIntent = new Intent(OptionsActivity.this, GraphingActivity.class);
 	            	myIntent.putExtra("pt", generateGraphParcel());
+	            	myIntent.putExtra("futuresPrice", currentFuturePrice);
 	            	OptionsActivity.this.startActivity(myIntent);
             	}
             	else Toast.makeText(this, ERROR_NO_PRODUCT, Toast.LENGTH_SHORT).show();
