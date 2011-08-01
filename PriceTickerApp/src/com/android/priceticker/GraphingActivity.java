@@ -202,6 +202,7 @@ public class GraphingActivity extends Activity implements OnTouchListener, OnCli
 		if (whichValue.equals("Rho"))
 			mySimpleXYPlot.addSeries(rhoVsStrike, myLPFormatter(Color.RED));
 		
+		// Recalculate min/max values
 		calculateTouchValues();
 
 		//Enact all changes
@@ -232,6 +233,7 @@ public class GraphingActivity extends Activity implements OnTouchListener, OnCli
 		if (whichValue.equals("Rho"))
 			mySimpleXYPlot.removeSeries(rhoVsStrike);
 		
+		// Recalculate min/max values
 		calculateTouchValues();
 		
 		//Enact all changes

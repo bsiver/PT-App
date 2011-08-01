@@ -74,7 +74,6 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	private TableLayout dtLayout2;		// Data table page 2
 	private TextView futureHeader;
 	private TextView expireDateHeader;
-	private TextView closestStrikeHeader;
 	private ToggleButton refreshToggleButton;
 	private ViewFlipper dataFlipper;
 	private ViewFlipper dataHeadingFlipper;
@@ -164,7 +163,6 @@ public class OptionsActivity extends Activity implements OnClickListener {
         dtLayout2 = (TableLayout) findViewById(R.id.dataTable2);
         futureHeader = (TextView) findViewById(R.id.displayHeader);
         expireDateHeader = (TextView) findViewById(R.id.expireDateHeader);
-        closestStrikeHeader = (TextView) findViewById(R.id.closestStrikeHeader);
         refreshToggleButton = (ToggleButton) findViewById(R.id.toggleButton);
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         dataFlipper = (ViewFlipper) findViewById(R.id.dataTableFlipper);
@@ -314,7 +312,6 @@ public class OptionsActivity extends Activity implements OnClickListener {
         	// Clear data views
         	futureHeader.setText("");
         	expireDateHeader.setText("");
-        	closestStrikeHeader.setText("");
         	dtLayout.removeAllViews();
         	dtLayout2.removeAllViews();
         	
@@ -595,7 +592,6 @@ public class OptionsActivity extends Activity implements OnClickListener {
 			rowInsCount++;
 
         }
-        closestStrikeHeader.setText("Closest strike: "+priceDF.format(closestStrike));
     }
     
     /*
