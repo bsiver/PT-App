@@ -133,7 +133,6 @@ public class GraphingActivity extends Activity implements OnTouchListener, OnCli
 	    thetaSeries = hm.get("thetaCall");
 	    rhoSeries = hm.get("rhoCall");
 	    futuresPrice = getIntent().getExtras().getDouble("futuresPrice");
-	    Toast.makeText(GraphingActivity.this, futuresPrice+"", Toast.LENGTH_SHORT).show();
 	    
         // Initialize our XYPlot reference:
         mySimpleXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
