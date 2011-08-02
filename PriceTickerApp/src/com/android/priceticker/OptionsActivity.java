@@ -118,7 +118,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
     private static final String WEB_SERVICE_IP = "192.168.0.210";
     
     									
-    private static final DecimalFormat priceDF = new DecimalFormat("$0");
+    private static final DecimalFormat priceDF = new DecimalFormat("0");
     private static final DecimalFormat greeksDFLT1 = new DecimalFormat("###.00");
     private static final DecimalFormat greeksDFGT1 = new DecimalFormat(".00000");
     
