@@ -89,6 +89,8 @@ public class GraphingActivity extends Activity implements OnTouchListener, OnCli
     private ArrayList<Double> rhoSeries;
     private double futuresPrice;
     
+    private static int seriesCount = 0;
+    
 	
 	final private double difPadding = 0.0;
 	 
@@ -118,6 +120,11 @@ public class GraphingActivity extends Activity implements OnTouchListener, OnCli
         checkbox7.setOnClickListener(this);
         checkbox8.setOnClickListener(this);
         checkbox9.setOnClickListener(this);
+        
+        checkbox1.setChecked(true);
+        checkbox2.setChecked(true);
+        checkbox3.setChecked(true);
+        checkbox4.setChecked(true);
         
         // Retrieve and unpackage graphing data sent from Options activity
         HashMap<String, ArrayList<Double>> serializableExtra = (HashMap<String, ArrayList<Double>>) getIntent().getSerializableExtra("pt");
@@ -150,7 +157,13 @@ public class GraphingActivity extends Activity implements OnTouchListener, OnCli
         vegaVsStrike = new SimpleXYSeries(strikeSeries, vegaSeries, "Vega");
         thetaVsStrike = new SimpleXYSeries(strikeSeries, thetaSeries, "Theta");
         rhoVsStrike = new SimpleXYSeries(strikeSeries, rhoSeries, "Rho");
-        
+
+        // Display 4 checkboxes by default
+        addSeries(checkbox1);
+        addSeries(checkbox2);
+        addSeries(checkbox3);
+        addSeries(checkbox4);
+
         XValueMarker futuresMarker = new XValueMarker(futuresPrice, "Current Future Price");
         Paint greenPaint = new Paint();
         greenPaint.setColor(Color.GREEN);
@@ -201,6 +214,8 @@ public class GraphingActivity extends Activity implements OnTouchListener, OnCli
 		if (whichValue.equals("Rho"))
 			mySimpleXYPlot.addSeries(rhoVsStrike, myLPFormatter(Color.RED));
 		
+		seriesCount++;
+		
 		// Recalculate min/max values
 		calculateTouchValues();
 
@@ -213,27 +228,36 @@ public class GraphingActivity extends Activity implements OnTouchListener, OnCli
 		String whichValue = v.getText().toString();
 		Toast.makeText(GraphingActivity.this, whichValue + " unselected", Toast.LENGTH_SHORT).show();
 		
-		if (whichValue.equals("Call Bid"))
-			mySimpleXYPlot.removeSeries(callBidVsStrike);
-		if (whichValue.equals("Call Ask"))
-			mySimpleXYPlot.removeSeries(callAskVsStrike);
-		if (whichValue.equals("Put Bid"))
-			mySimpleXYPlot.removeSeries(putBidVsStrike);
-		if (whichValue.equals("Put Ask"))
-			mySimpleXYPlot.removeSeries(putAskVsStrike);
-		if (whichValue.equals("Delta"))
-			mySimpleXYPlot.removeSeries(deltaVsStrike);
-		if (whichValue.equals("Gamma"))
-			mySimpleXYPlot.removeSeries(gammaVsStrike);
-		if (whichValue.equals("Vega"))
-			mySimpleXYPlot.removeSeries(vegaVsStrike);
-		if (whichValue.equals("Theta"))
-			mySimpleXYPlot.removeSeries(thetaVsStrike);
-		if (whichValue.equals("Rho"))
-			mySimpleXYPlot.removeSeries(rhoVsStrike);
+		if (seriesCount > 1) {
+			if (whichValue.equals("Call Bid"))
+				mySimpleXYPlot.removeSeries(callBidVsStrike);
+			if (whichValue.equals("Call Ask"))
+				mySimpleXYPlot.removeSeries(callAskVsStrike);
+			if (whichValue.equals("Put Bid"))
+				mySimpleXYPlot.removeSeries(putBidVsStrike);
+			if (whichValue.equals("Put Ask"))
+				mySimpleXYPlot.removeSeries(putAskVsStrike);
+			if (whichValue.equals("Delta"))
+				mySimpleXYPlot.removeSeries(deltaVsStrike);
+			if (whichValue.equals("Gamma"))
+				mySimpleXYPlot.removeSeries(gammaVsStrike);
+			if (whichValue.equals("Vega"))
+				mySimpleXYPlot.removeSeries(vegaVsStrike);
+			if (whichValue.equals("Theta"))
+				mySimpleXYPlot.removeSeries(thetaVsStrike);
+			if (whichValue.equals("Rho"))
+				mySimpleXYPlot.removeSeries(rhoVsStrike);
+			seriesCount--;
+		}
+		// Don't allow user to remove final series
+		// Note: Added due to bug in AndroidPlot that throws NPE if last series is removed
+		else {
+			v.toggle();
+		}
 		
 		// Recalculate min/max values
 		calculateTouchValues();
+
 		
 		//Enact all changes
 		mySimpleXYPlot.redraw();

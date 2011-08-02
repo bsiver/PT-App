@@ -244,19 +244,10 @@
 		    	    android:textColor="@color/black"
 		    	    android:layout_width="fill_parent"
 		    	    android:layout_column="1"
-		    	    android:layout_gravity="left"
-		    	    android:layout_height="wrap_content">
-		    	  </TextView>
-		    	  <TextView
-		    	    android:id="@+id/closestStrikeHeader"
-		    	    android:textSize="18dip"
-		    	    android:textColor="@color/black"
-		    	    android:layout_width="fill_parent"
-		    	    android:layout_column="2"
 		    	    android:layout_gravity="right"
 		    	    android:layout_height="wrap_content">
-		    	  </TextView>
-			  </TableRow>
+		    	</TextView>
+		     </TableRow>
 			 </TableLayout>
 		    
 		    
