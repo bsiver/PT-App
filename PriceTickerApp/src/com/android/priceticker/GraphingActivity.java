@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.CheckBox;
@@ -193,7 +194,6 @@ public class GraphingActivity extends Activity implements OnTouchListener, OnCli
     
 	private void addSeries(CheckBox v) {
 		String whichValue = v.getText().toString();
-		Toast.makeText(GraphingActivity.this, whichValue + " selected", Toast.LENGTH_SHORT).show();
 		
 		if (whichValue.equals("Call Bid"))
 			mySimpleXYPlot.addSeries(callBidVsStrike, myLPFormatter(Color.RED));
@@ -226,7 +226,6 @@ public class GraphingActivity extends Activity implements OnTouchListener, OnCli
 	
 	private void removeSeries(CheckBox v) {
 		String whichValue = v.getText().toString();
-		Toast.makeText(GraphingActivity.this, whichValue + " unselected", Toast.LENGTH_SHORT).show();
 		
 		if (seriesCount > 1) {
 			if (whichValue.equals("Call Bid"))

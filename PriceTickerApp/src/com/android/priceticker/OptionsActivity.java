@@ -135,7 +135,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
     /* Demo File Mode related fields */
     
     // Time to wait between file reads (when in readFromFileMode)
-    private static int FILE_SLEEP_TIME_MILLIS = 1000;
+    private static int FILE_SLEEP_TIME_MILLIS = 100;
     
     // Used for capturing web service data
     private static Boolean fileRecord = false;
@@ -153,7 +153,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // Set custom title bar
+        // Remove default title bar
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         
         setContentView(R.layout.options);
@@ -858,12 +858,9 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	    	    	String line="";
 	    	    	if (sc.hasNextLine())
 	    	    		line = sc.nextLine();
-	    	    	else {
-	    	    		fst.cancel(false);
-	    	    		fst = new FileAsyncTask();
-	    	    	}
 	    	    	linesRead++;
-	    	    	if (line.equals("EOL")) break;
+	    	    	if (line.equals("EOL"))
+	    	    		break;
 	    	        text.append(line);
 	    	        text.append("\n");
 	    	        

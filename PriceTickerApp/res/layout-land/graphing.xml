@@ -2,74 +2,82 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-    
+
     	<CheckBox android:id="@+id/checkbox1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingRight="10dip"
-        android:text="Call Bid" />
+        android:paddingRight="20dip"
+        android:text="Call Bid"
+        />
     
     	<CheckBox android:id="@+id/checkbox2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/checkbox1"
-        android:paddingRight="10dip"
-        android:text="Call Ask" />
+        android:paddingRight="20dip"
+        android:text="Call Ask"
+        />
         
         <CheckBox android:id="@+id/checkbox3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/checkbox2"
-        android:paddingRight="10dip"
-        android:text="Put Bid" />
+        android:paddingRight="20dip"
+        android:text="Put Bid"
+        />
         
         <CheckBox android:id="@+id/checkbox4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/checkbox3"
-        android:paddingRight="10dip"
-        android:text="Put Ask" />
+        android:paddingRight="20dip"
+        android:text="Put Ask" 
+        />
         
         <CheckBox android:id="@+id/checkbox5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/checkbox4"
-        android:paddingRight="10dip"
-        android:text="Delta" />
+        android:paddingRight="20dip"
+        android:text="Delta" 
+        />
         
         <CheckBox android:id="@+id/checkbox6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/checkbox5"
-        android:paddingRight="10dip"
-        android:text="Gamma" />
+        android:paddingRight="20dip"
+        android:text="Gamma" 
+        />
         
         <CheckBox android:id="@+id/checkbox7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/checkbox6"
-        android:paddingRight="10dip"
-        android:text="Vega" />
+        android:paddingRight="20dip"
+        android:text="Vega" 
+        />
         
         <CheckBox android:id="@+id/checkbox8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/checkbox7"
-        android:paddingRight="10dip"
-        android:text="Theta" />
+        android:paddingRight="20dip"
+        android:text="Theta" 
+        />
         
         <CheckBox android:id="@+id/checkbox9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/checkbox8"
-        android:paddingRight="10dip"
-        android:text="Rho" />
+        android:paddingRight="20dip"
+        android:text="Rho" 
+        />
     
 	    <com.androidplot.xy.XYPlot
 	    android:id="@+id/mySimpleXYPlot"
 	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
+	    android:layout_height="fill_parent"
 	    android:layout_below="@id/checkbox1"
-	    title=" "/>
-	    
+	    title=" " />
 </RelativeLayout>
