@@ -17,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.CheckBox;
@@ -257,7 +256,6 @@ public class GraphingActivity extends Activity implements OnTouchListener, OnCli
 		// Recalculate min/max values
 		calculateTouchValues();
 
-		
 		//Enact all changes
 		mySimpleXYPlot.redraw();
 	}

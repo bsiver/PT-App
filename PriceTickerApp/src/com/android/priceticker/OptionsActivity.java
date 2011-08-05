@@ -16,6 +16,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -40,6 +41,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
 
+import com.androidplot.LineRegion;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.MalformedJsonException;
@@ -98,7 +100,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	// Gesture detection
     private static final int SWIPE_MIN_DISTANCE = 120;
     private static final int SWIPE_MAX_OFF_PATH = 250;
-    private static final int SWIPE_THRESHOLD_VELOCITY = 120;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 60;
     private GestureDetector gestureDetector;
     View.OnTouchListener gestureListener;
     
@@ -125,7 +127,9 @@ public class OptionsActivity extends Activity implements OnClickListener {
     
     
     // Colors for TextViews and backgrounds
-    private static final int orangeBackground = 0xAFEA8400;
+    // Note: these colors were suggested from FEST
+    
+    private static final int orangeBackground = 0xFFFFCC3F;
     private static final int blueText = 0xFF1F78B2;
     
     // Time to wait between web service calls
@@ -135,7 +139,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
     /* Demo File Mode related fields */
     
     // Time to wait between file reads (when in readFromFileMode)
-    private static int FILE_SLEEP_TIME_MILLIS = 100;
+    private static int FILE_SLEEP_TIME_MILLIS = 1000;
     
     // Used for capturing web service data
     private static Boolean fileRecord = false;
@@ -554,6 +558,21 @@ public class OptionsActivity extends Activity implements OnClickListener {
 			if (thisStrike == closestStrike) {
 				tr.setBackgroundColor(orangeBackground);
 				tr2.setBackgroundColor(orangeBackground);
+				callBidTV.setTypeface(null, Typeface.BOLD);
+			    callAskTV.setTypeface(null, Typeface.BOLD);
+				strikeTV.setTypeface(null, Typeface.BOLD);
+				putBidTV.setTypeface(null, Typeface.BOLD);
+				putAskTV.setTypeface(null, Typeface.BOLD);
+				strikeTV2.setTypeface(null, Typeface.BOLD);
+				deltaTV.setTypeface(null, Typeface.BOLD);
+				gammaTV.setTypeface(null, Typeface.BOLD);
+				vegaTV.setTypeface(null, Typeface.BOLD);
+				thetaTV.setTypeface(null, Typeface.BOLD);
+				rhoTV.setTypeface(null, Typeface.BOLD);
+				callBidTV2.setTypeface(null, Typeface.BOLD);
+				callAskTV2.setTypeface(null, Typeface.BOLD);
+				putBidTV2.setTypeface(null, Typeface.BOLD);
+				putAskTV2.setTypeface(null, Typeface.BOLD);
 			}
 
 			tr.addView(callBidTV);
@@ -756,7 +775,8 @@ public class OptionsActivity extends Activity implements OnClickListener {
             	showError(ERROR_NO_ROWS);
             }
     	}
-
+    	
+    	// Formulates the actual web path URI and returns response using RestClient library
     	public String getResponse(String request) throws IOException {
         	String webPathRequest = ""; 
         	String response="";
@@ -775,6 +795,8 @@ public class OptionsActivity extends Activity implements OnClickListener {
         }
     	
         protected ArrayList<PriceTick> parseJSON(String response) {
+        	// fileRecord mode is used to write sample data to disk;
+        	// it can be only be set my manually changed the boolean flagref
         	if (fileRecord) {
 	        	try { 
 	        		f = new FileWriter("/mnt/sdcard/download/"+productChoice+".txt", true);
@@ -817,7 +839,6 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	            try { 
 	            	response =  getResponse(request[0]);
 	            } catch (Exception e) {
-	            	e.printStackTrace();
 	            }
 	            if (response.equals(MONGO_CONNECT_ERR))
 	            	return null;
@@ -846,9 +867,6 @@ public class OptionsActivity extends Activity implements OnClickListener {
 
     	public String getResponse(String request) throws IOException {
 	    	File sdcard = Environment.getExternalStorageDirectory();
-	    	
-	    	File file = new File(sdcard+"/Download/",productChoice+".txt");
-
 	    	StringBuilder text = new StringBuilder();
 
 	    	try {
@@ -861,12 +879,17 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	    	    	linesRead++;
 	    	    	if (line.equals("EOL"))
 	    	    		break;
-	    	        text.append(line);
-	    	        text.append("\n");
-	    	        
+	    	    	if (line.equals("EOF")) {
+	    	    		linesRead = 0;
+	    	    	}
+	    	    	else {
+	    	    		text.append(line);
+		    	        text.append("\n");
+	    	    	}
 	    	    }
 	    	}
 	    	catch (IOException e) {
+	    		showError("File "+file.getName()+" not found!");
 	    	}
 	    	
             return text.toString();
