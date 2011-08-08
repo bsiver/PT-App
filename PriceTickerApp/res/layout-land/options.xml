@@ -4,8 +4,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/app_border"
-    >
+    android:background="@drawable/app_border">
     
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
@@ -62,14 +61,14 @@
 			<TableRow>
 			    <TextView android:text="Calls"    
 			        android:layout_column="1"
-					android:textStyle="normal|bold|italic"
+					android:textStyle="normal|bold"
 					android:textColor="@color/black"
 					android:textSize="20dip"
 					android:gravity="center">
 			    </TextView>
 			    <TextView android:text="Puts"
 			        android:layout_column="4"
-			        android:textStyle="normal|bold|italic"
+			        android:textStyle="normal|bold"
 					android:textColor="@color/black"
 					android:textSize="20dip"
 					android:gravity="left">
@@ -146,14 +145,14 @@
 			<TableRow>
 			    <TextView android:text="Calls"    
 			        android:layout_column="1"
-					android:textStyle="normal|bold|italic"
+					android:textStyle="normal|bold"
 					android:textColor="@color/black"
 					android:textSize="20dip"
 					android:gravity="center">
 			    </TextView>
 			    <TextView android:text="Puts"
 			        android:layout_column="4"
-			        android:textStyle="normal|bold|italic"
+			        android:textStyle="normal|bold"
 					android:textColor="@color/black"
 					android:textSize="20dip"
 					android:gravity="left">
@@ -246,8 +245,20 @@
 		    	    android:textColor="@color/black"
 		    	    android:layout_width="fill_parent"
 		    	    android:layout_column="1"
-		    	    android:layout_gravity="left"
+		    	    android:layout_gravity="center"
+		    	    android:gravity="center"
 		    	    android:layout_height="wrap_content">
+		    	</TextView>
+		    	<TextView
+		    	    android:text="Demo Mode"
+		    	    android:id="@+id/demoModeHeader"
+		    	    android:textSize="18dip"
+		    	    android:textColor="@color/black"
+		    	    android:layout_width="fill_parent"
+		    	    android:layout_column="2"
+		    	    android:layout_gravity="right"
+		    	    android:layout_height="wrap_content"
+		    	    android:visibility="invisible">
 		    	</TextView>
 		     </TableRow>
 			 </TableLayout>

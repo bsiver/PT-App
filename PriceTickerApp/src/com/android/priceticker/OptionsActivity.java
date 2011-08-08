@@ -1,6 +1,8 @@
 package com.android.priceticker;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -41,10 +43,8 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
 
-import com.androidplot.LineRegion;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
-import com.google.gson.stream.MalformedJsonException;
 
 
 /****************************************************
@@ -76,6 +76,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	private TableLayout dtLayout2;		// Data table page 2
 	private TextView futureHeader;
 	private TextView expireDateHeader;
+	private TextView demoModeHeader;
 	private ToggleButton refreshToggleButton;
 	private ViewFlipper dataFlipper;
 	private ViewFlipper dataHeadingFlipper;
@@ -167,6 +168,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
         dtLayout2 = (TableLayout) findViewById(R.id.dataTable2);
         futureHeader = (TextView) findViewById(R.id.displayHeader);
         expireDateHeader = (TextView) findViewById(R.id.expireDateHeader);
+        demoModeHeader = (TextView) findViewById(R.id.demoModeHeader);
         refreshToggleButton = (ToggleButton) findViewById(R.id.toggleButton);
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         dataFlipper = (ViewFlipper) findViewById(R.id.dataTableFlipper);
@@ -322,6 +324,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
         	// Start refreshing new product choice
         	if (refreshToggleButton.isChecked()) {
         		wst.execute(productChoice);
+        		demoModeHeader.setVisibility(View.INVISIBLE);
         	}
         	
         	
@@ -352,10 +355,12 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	    		InetAddress in = InetAddress.getByName(WEB_SERVICE_IP);
 	    		if (in.isReachable(2000)) {
 	    			wst.execute(productChoice);
+	    			demoModeHeader.setVisibility(View.INVISIBLE);
 	    		}
 	    		else {
 	    			// Prompt user to enter demo mode
 	    			demoPrompt("Connection to the database could not be established");
+	    			demoModeHeader.setVisibility(View.VISIBLE);
 	    		}
 	    		
 	    	} catch (Exception e) {}
@@ -761,6 +766,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
     	
     	protected void onPostExecute(String error) {
     		demoPrompt(error);
+    		demoModeHeader.setVisibility(View.VISIBLE);
     	}
     	
     	protected void onProgressUpdate(ArrayList<PriceTick>... result) {
@@ -828,7 +834,8 @@ public class OptionsActivity extends Activity implements OnClickListener {
     	private ArrayList <PriceTick> arr;
     	File sdcard = Environment.getExternalStorageDirectory();
     	File file = new File(sdcard+"/Download/",productChoice+".txt");
-
+    	BufferedReader br;
+    	
     	StringBuilder text = new StringBuilder();
     	int linesRead = 0;
 
@@ -842,6 +849,11 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	            }
 	            if (response.equals(MONGO_CONNECT_ERR))
 	            	return null;
+	            if (response.equals("EOF")) {
+	            	this.cancel(true);
+	            	fst = new FileAsyncTask();
+	            	fst.execute(productChoice);
+	            }
 	            // If the connection could not be made, display an error
 	        	if (response==null || response.equals(MONGO_CONNECT_ERR) || 
 	        		response.equals(MONGO_EXCEPTION_ERR) || response.contains(APACHE_CONNECT_ERR)) {
@@ -870,17 +882,22 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	    	StringBuilder text = new StringBuilder();
 
 	    	try {
-	    	    Scanner sc = new Scanner(file);
-	    	    for (int ind = 0; ind < linesRead; sc.nextLine(), ind++);
+	    	    br = new BufferedReader(new FileReader(file));
+	    	    int count = 0;
+	    	    while  (count < linesRead) {
+	    	    	br.readLine();
+	    	    	count++;
+	    	    }
 	    	    while (true) {
 	    	    	String line="";
-	    	    	if (sc.hasNextLine())
-	    	    		line = sc.nextLine();
+	    	    	line = br.readLine();
 	    	    	linesRead++;
-	    	    	if (line.equals("EOL"))
+	    	    	if (line.contains("EOL")) {
 	    	    		break;
-	    	    	if (line.equals("EOF")) {
+	    	    	}
+	    	    	if (line.contains("EOF")) {
 	    	    		linesRead = 0;
+	    	    		return "EOF";
 	    	    	}
 	    	    	else {
 	    	    		text.append(line);
