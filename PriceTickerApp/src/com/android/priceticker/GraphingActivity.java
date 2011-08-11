@@ -1,6 +1,7 @@
 package com.android.priceticker;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -27,6 +28,7 @@ import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XValueMarker;
 import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.YValueMarker;
 
 /****************************************************
  * Price Ticker App - Graphing Activity
@@ -140,6 +142,11 @@ public class GraphingActivity extends Activity implements OnTouchListener, OnCli
 	    thetaSeries = hm.get("thetaCall");
 	    rhoSeries = hm.get("rhoCall");
 	    futuresPrice = getIntent().getExtras().getDouble("futuresPrice");
+	    
+	    int [] lengths = { putBidSeries.size(), putAskSeries.size(), strikeSeries.size(),
+	    	callBidSeries.size(), callAskSeries.size(), deltaSeries.size(), gammaSeries.size(),
+	    	vegaSeries.size(), thetaSeries.size(), rhoSeries.size()
+	    };
 	    
         // Initialize our XYPlot reference:
         mySimpleXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
@@ -306,6 +313,7 @@ public class GraphingActivity extends Activity implements OnTouchListener, OnCli
  
 	@Override
 	public boolean onTouch(View arg0, MotionEvent event) {
+		mySimpleXYPlot.removeMarkers();
 		switch(event.getAction() & MotionEvent.ACTION_MASK) {
 			case MotionEvent.ACTION_DOWN: // Start gesture
 				firstFinger = new PointF(event.getX(), event.getY());
@@ -353,7 +361,6 @@ public class GraphingActivity extends Activity implements OnTouchListener, OnCli
 						lastZooming += 1;
 					zoom(lastZooming);
 					checkBoundaries();
-					mySimpleXYPlot.redraw();
  
 				} else if (mode == TWO_FINGERS_DRAG) {
 					final float oldDist = distBetweenFingers;

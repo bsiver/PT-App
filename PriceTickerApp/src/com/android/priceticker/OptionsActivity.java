@@ -324,7 +324,6 @@ public class OptionsActivity extends Activity implements OnClickListener {
         	// Start refreshing new product choice
         	if (refreshToggleButton.isChecked()) {
         		wst.execute(productChoice);
-        		demoModeHeader.setVisibility(View.INVISIBLE);
         	}
         	
         	
@@ -355,12 +354,10 @@ public class OptionsActivity extends Activity implements OnClickListener {
 	    		InetAddress in = InetAddress.getByName(WEB_SERVICE_IP);
 	    		if (in.isReachable(2000)) {
 	    			wst.execute(productChoice);
-	    			demoModeHeader.setVisibility(View.INVISIBLE);
 	    		}
 	    		else {
 	    			// Prompt user to enter demo mode
 	    			demoPrompt("Connection to the database could not be established");
-	    			demoModeHeader.setVisibility(View.VISIBLE);
 	    		}
 	    		
 	    	} catch (Exception e) {}
@@ -701,6 +698,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
         	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
             	fst.execute(productChoice);
+            	demoModeHeader.setVisibility(View.VISIBLE);
             }
             })
         	.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -708,6 +706,7 @@ public class OptionsActivity extends Activity implements OnClickListener {
                  dialog.cancel();
 	    		 if (refreshToggleButton.isChecked())
 	    			 refreshToggleButton.toggle();
+	    		 demoModeHeader.setVisibility(View.INVISIBLE);
             }
         });
         AlertDialog welcomeMessage = welcomeDialog.create();
@@ -766,7 +765,6 @@ public class OptionsActivity extends Activity implements OnClickListener {
     	
     	protected void onPostExecute(String error) {
     		demoPrompt(error);
-    		demoModeHeader.setVisibility(View.VISIBLE);
     	}
     	
     	protected void onProgressUpdate(ArrayList<PriceTick>... result) {
