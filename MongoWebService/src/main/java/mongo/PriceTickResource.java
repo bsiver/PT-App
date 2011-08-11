@@ -24,7 +24,7 @@ public class PriceTickResource {
 	// Threshold for strikes above/below current futures price
 	private static final double EUD_STRIKE_RANGE = 55;
 	private static final double CORN_STRIKE_RANGE = 55;
-	private static final double OIL_STRIKE_RANGE = 750;
+	private static final double OIL_STRIKE_RANGE = 550;
 	private static final double TY_STRIKE_RANGE = 55;
 	
 	Mongo m;
