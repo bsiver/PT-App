@@ -1,6 +1,3 @@
-# Introduction
-This project is being developed over the summer of 2011 for an internship at CME Group.
-
 # Directories
 
 The MongoWebService/ directory contains all of the code used to communicate to the MongoDB instance holding this project's data.  This project uses the Jersey implementation of JAX-RS to implement a RESTful web service.
